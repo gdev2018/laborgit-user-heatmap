@@ -1,45 +1,38 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import purgecss from "vite-plugin-purgecss";
-import postcss from "postcss";
-import * as path from "path";
+import path from "path";
+import react from "@vitejs/plugin-react-swc";
 import pkg from "./package.json";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    purgecss(), // Purge unused CSS
-    {
-      name: "postcss",
-      enforce: "pre",
-      transformIndexHtml(html) {
-        return html;
-      },
-      apply: "build",
-      transform(code, id) {
-        if (!id.endsWith(".css")) return null;
-        return postcss().process(code);
-      }
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "~": path.resolve(__dirname, "./src")
     }
-  ],
+  },
   server: {
     open: true
   },
   build: {
-    lib: {
-      entry: path.resolve(__dirname, "src/main.tsx"),
-      name: "react-cron-schedule-typescript",
-      fileName: (format) => `${format === "es" ? "index.es.js" : "index.js"}`
-    },
+    outDir: "./dist",
     rollupOptions: {
-      external: Object.keys(
-        { ...pkg.dependencies, ...pkg.peerDependencies } || {}
-      ),
+      input: "src/main.tsx", // specify the entry point of your application
       output: {
-        globals: {
-          react: "React"
-        }
+        dir: "dist", // specify the output directory
+        entryFileNames: `app_calendar_heatmap.bundle.js`, // specify the output file
+        format: "iife", // specify the format of the output file
+        name: "app_calendar_heatmap" // specify the name of the global variable
       }
-    }
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
+      exclude: ["node_modules/lodash-es/**", "node_modules/@types/lodash-es/**"]
+    },
+    assetsInlineLimit: 10240 // 10KB
+  },
+  optimizeDeps: {
+    include: ["lodash", "date-fns"], // Add dependencies that need to be pre-bundled
+    exclude: ["lodash-es", "@types/lodash-es"], // Exclude dependencies that should not be optimized
+    entries: ["src/main.tsx"] // Specify custom entry points for optimization
   }
 });
