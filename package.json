@@ -1,6 +1,6 @@
 {
   "name": "laborgit-user-heatmap",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "User activity heatmap for the LaborGit project",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
