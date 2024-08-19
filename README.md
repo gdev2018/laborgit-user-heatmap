@@ -1,0 +1,1 @@
+User activity heatmap for the LaborGit project
