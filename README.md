@@ -9,6 +9,9 @@ package.json:
     }
 }
 ```
+```shell
+npm i --no-install-peers
+```
 
 or
 
