@@ -3,6 +3,7 @@ import path from "path";
 import react from "@vitejs/plugin-react-swc";
 import pkg from "./package.json";
 
+// todo next revert to prev version
 export default defineConfig({
   plugins: [react()],
   resolve: {
