@@ -3,7 +3,7 @@ import {
   useGetCalendarQuery,
   useGetUserStepsQuery,
   useGetUserTypeLifeQuery,
-  useGetUserYearsQuery
+  useGetUserYearsQuery,
 } from "../../redux";
 import UserSteps from "./UserSteps";
 import YearsFilter from "./YearsFilter";
@@ -21,7 +21,7 @@ interface HeatmapValue {
 const filtersInitial: Filters = {
   filterDates: null,
   filterTypeLife: null,
-  filterTask: null
+  filterTask: null,
 };
 
 // const dataMock = [
@@ -68,30 +68,30 @@ const UserActivity = ({ user }: IUserYearClick) => {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [selectedDateStart, setSelectedDateStart] = useState<string>(
-    `${currentYear}-01-01`
+    `${currentYear}-01-01`,
   );
   const [selectedDateEnd, setSelectedDateEnd] = useState<string>(
-    `${currentYear + 1}-01-01`
+    `${currentYear + 1}-01-01`,
   );
 
   const [filters, setFilters] = useState<Filters>(filtersInitial);
 
   const { data: typeLifeData } = useGetUserTypeLifeQuery({
-    user
+    user,
   });
 
   const {
     data: stepsData,
     error: stepsError,
-    isLoading: stepsIsLoading
+    isLoading: stepsIsLoading,
   } = useGetUserStepsQuery({
     user,
     dateStart: selectedDateStart,
-    dateEnd: selectedDateEnd
+    dateEnd: selectedDateEnd,
   });
 
   const { data: yearsData } = useGetUserYearsQuery({
-    user
+    user,
   });
 
   const handleYearSelect = useCallback(
@@ -101,56 +101,59 @@ const UserActivity = ({ user }: IUserYearClick) => {
       setSelectedDateEnd(`${Number(year) + 1}-01-01`);
       setFilters((prevState) => ({
         ...prevState,
-        filterDates: null
+        filterDates: null,
       }));
     },
-    [setSelectedYear, setSelectedDateStart, setSelectedDateEnd]
+    [setSelectedYear, setSelectedDateStart, setSelectedDateEnd],
   );
 
-  // todo set types vor value
-  const handleOnClickHeatmap = useCallback((value: HeatmapValue) => {
-    console.log("value=", value);
-    if (typeof value.date === "string") {
-      const startDate = new Date(value.date);
-      const endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + 1);
-
-      const startDateString = startDate.toISOString().split("T")[0]; // Set the start date in YYYY-MM-DD format
-      const endDateString = endDate.toISOString().split("T")[0]; // Set the end date in YYYY-MM-DD format
-      setSelectedDateStart(startDateString); // todo next - why this row fires calendarHeatmap.init twice?
-      // т.к. меняется state компонента, то он перерисовывается и все его дочерние
-      // чтоб дочерние не менялись, если не менялись его props надо React.memo()
-      // но, видимо, не может правильно сравнить calendarData из-за неглубокого сравнения (shallow compare)
-      // надо вторым параметром задать кастомное сравнение в React.memo(Component, ... )
-      // и обязательно определить конкретный тип для возвращаемого значения calendarData
-      // const MyComponent = React.memo((props) => {
-      //   /* render using props */
-      // }, (prevProps, nextProps) => {
-      //   // Ваше собственное сравнение
-      //   return prevProps.user.name === nextProps.user.name; // Пример глубокого сравнения
-      // });
-      setSelectedDateEnd(endDateString);
-
-      setFilters((prevState) => ({
-        ...prevState,
-        filterDates: {
-          start: startDateString,
-          end: endDateString,
-          onDelete: handleOnDeleteDates
-        }
-      }));
-    } else {
-      console.error("The value object does not contain a valid date field.");
-    }
-  }, []);
-
-  const handleOnDeleteDates = function () {
+  const handleOnDeleteDates = useCallback(() => {
     handleYearSelect(currentYear);
     setFilters((prevState) => ({
       ...prevState,
-      filterDates: null
+      filterDates: null,
     }));
-  };
+  }, [currentYear, handleYearSelect]);
+
+  // todo set types vor value
+  const handleOnClickHeatmap = useCallback(
+    (value: HeatmapValue) => {
+      console.log("value=", value);
+      if (typeof value.date === "string") {
+        const startDate = new Date(value.date);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 1);
+
+        const startDateString = startDate.toISOString().split("T")[0]; // Set the start date in YYYY-MM-DD format
+        const endDateString = endDate.toISOString().split("T")[0]; // Set the end date in YYYY-MM-DD format
+        setSelectedDateStart(startDateString); // todo next - why this row fires calendarHeatmap.init twice?
+        // т.к. меняется state компонента, то он перерисовывается и все его дочерние
+        // чтоб дочерние не менялись, если не менялись его props надо React.memo()
+        // но, видимо, не может правильно сравнить calendarData из-за неглубокого сравнения (shallow compare)
+        // надо вторым параметром задать кастомное сравнение в React.memo(Component, ... )
+        // и обязательно определить конкретный тип для возвращаемого значения calendarData
+        // const MyComponent = React.memo((props) => {
+        //   /* render using props */
+        // }, (prevProps, nextProps) => {
+        //   // Ваше собственное сравнение
+        //   return prevProps.user.name === nextProps.user.name; // Пример глубокого сравнения
+        // });
+        setSelectedDateEnd(endDateString);
+
+        setFilters((prevState) => ({
+          ...prevState,
+          filterDates: {
+            start: startDateString,
+            end: endDateString,
+            onDelete: handleOnDeleteDates,
+          },
+        }));
+      } else {
+        console.error("The value object does not contain a valid date field.");
+      }
+    },
+    [handleOnDeleteDates],
+  );
 
   const handleOnClickTypeLife = (typeLife: IDictWithColor) => {
     setFilters((prevState) => ({
@@ -159,14 +162,14 @@ const UserActivity = ({ user }: IUserYearClick) => {
         id: typeLife.id,
         name: typeLife.name,
         color: typeLife.color,
-        onDelete: handleOnDeleteTypeLife
-      }
+        onDelete: handleOnDeleteTypeLife,
+      },
     }));
   };
   const handleOnDeleteTypeLife = function () {
     setFilters((prevState) => ({
       ...prevState,
-      filterTypeLife: null
+      filterTypeLife: null,
     }));
   };
 
@@ -176,14 +179,14 @@ const UserActivity = ({ user }: IUserYearClick) => {
       filterTask: {
         id: task.id,
         name: task.name,
-        onDelete: handleOnDeleteTask
-      }
+        onDelete: handleOnDeleteTask,
+      },
     }));
   };
   const handleOnDeleteTask = function () {
     setFilters((prevState) => ({
       ...prevState,
-      filterTask: null
+      filterTask: null,
     }));
   };
 
@@ -191,10 +194,10 @@ const UserActivity = ({ user }: IUserYearClick) => {
   const {
     data: calendarData,
     error: calendarError,
-    isLoading: calendarIsLoading
+    isLoading: calendarIsLoading,
   } = useGetCalendarQuery({
     user,
-    year: selectedYear
+    year: selectedYear,
   });
 
   if (calendarIsLoading) {
@@ -214,7 +217,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
           className="inner-flex-item"
           style={{
             flex: 1,
-            overflow: "auto"
+            overflow: "auto",
           }}
         >
           {stepsIsLoading || stepsError !== undefined ? (
@@ -223,7 +226,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
             <TotalHeader
               totalResults={
                 // TODO totalResults not cleared on year change
-                stepsIsLoading ? null : stepsData?.totalResults ?? null
+                stepsIsLoading ? null : (stepsData?.totalResults ?? null)
               }
               year={selectedYear}
             />

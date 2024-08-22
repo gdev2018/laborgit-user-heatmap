@@ -18,11 +18,13 @@
 
     /* Linting */
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "downlevelIteration": true
   },
-  "include": ["apps/**/*.ts", "apps/**/*.tsx"],
-  "references": [{ "path": "./tsconfig.node.json"}]
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./**/*.jsx"],
 }
