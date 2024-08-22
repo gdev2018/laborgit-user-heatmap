@@ -15,23 +15,23 @@ export default defineConfig({
     open: true
   },
   // build: {
-  //   lib: {
-  //     entry: path.resolve(__dirname, "src/main.tsx"),
-  //     name: "app_calendar_heatmap",
-  //     fileName: (format) => `${format === "es" ? "index.es.js" : "index.js"}`
-  //   },
   //   outDir: "./dist",
-  //   rollupOptions: {
-  //     external: Object.keys({ ...pkg.dependencies, ...pkg.peerDependencies } || {}),
-  //     output: {
-  //       globals: {
-  //         react: "React"
-  //       }
-  //     }
+  //   lib: {
+  //     entry: 'src/main.tsx',
+  //     name: 'app_calendar_heatmap',
+  //     fileName: (format) => `app_calendar_heatmap.${format}.js`
+  //   }
+  // rollupOptions: {
+  // external: Object.keys({ ...pkg.dependencies, ...pkg.peerDependencies } || {}),
+  // output: {
+  //   globals: {
+  //     react: "React"
   //   }
   // }
+  // }
+  // }
   build: {
-    outDir: "./dist",
+    // outDir: "./dist",
     rollupOptions: {
       input: "src/main.tsx",
       output: {
