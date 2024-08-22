@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  Tooltip,
-  Typography
-} from "@mui/material";
+import { Card, CardContent, Chip, Stack, Tooltip, Typography } from "@mui/material";
 import { IDict, IDictWithColor, IUserStep } from "../../types";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import CommitOutlinedIcon from "@mui/icons-material/CommitOutlined";
@@ -22,9 +15,7 @@ interface StepCardProps {
 const formatStartFinishTimes = (userStep: IUserStep): string => {
   const startTime = userStep.start?.split("+")[0]?.split(" ")[1]?.slice(0, 5);
   const durationInSeconds = Number(userStep.value);
-  const finishTime = new Date(
-    new Date(userStep.start).getTime() + durationInSeconds * 1000
-  )
+  const finishTime = new Date(new Date(userStep.start).getTime() + durationInSeconds * 1000)
     .toISOString()
     .split("T")[1]
     .split(".")[0]
@@ -32,12 +23,7 @@ const formatStartFinishTimes = (userStep: IUserStep): string => {
   return `${startTime} - ${finishTime}`;
 };
 
-const StepCard = ({
-  userStep,
-  typeLifeColor,
-  onClickTypeLife,
-  onClickTask
-}: StepCardProps) => {
+const StepCard = ({ userStep, typeLifeColor, onClickTypeLife, onClickTask }: StepCardProps) => {
   console.log("StepCard enter");
   const startFinishTimes = formatStartFinishTimes(userStep);
   const tooltipTitle = userStep.mainevent ? "This step is Main event" : "";
@@ -100,9 +86,7 @@ const StepCard = ({
                 label={userStep.task}
                 color="primary"
                 variant="outlined"
-                onClick={() =>
-                  onClickTask({ id: userStep.taskid, name: userStep.task })
-                }
+                onClick={() => onClickTask({ id: userStep.taskid, name: userStep.task })}
               />
               <Chip
                 size="small"
@@ -121,9 +105,7 @@ const StepCard = ({
                 }
               />
             </Stack>
-            <Typography variant="h6">
-              {userStep.step || "empty step"}
-            </Typography>
+            <Typography variant="h6">{userStep.step || "empty step"}</Typography>
           </Stack>
         </Stack>
       </CardContent>

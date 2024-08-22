@@ -6,7 +6,7 @@ import {
   ITypeLife,
   IUserStep,
   IUserYear,
-  IUserYearClick,
+  IUserYearClick
 } from "../components/UserActivity/types";
 
 // const BASE_URL = "https://laborgit.ru";
@@ -27,7 +27,7 @@ export function powerBuilderColorToHex(pbColor: number): string {
 export const apiService = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_BASE_URL}`,
+    baseUrl: `${import.meta.env.VITE_API_BASE_URL}`
     // baseUrl: `${process.env.VITE_API_BASE_URL}`
     // baseUrl: BASE_URL
   }),
@@ -35,11 +35,11 @@ export const apiService = createApi({
     // TODO change string to another type
     getCalendar: builder.query<ICalendarDate[], IUserYearClick>({
       query: (args) => `/api/user/${args.user}/calendar/${args.year}/`,
-      keepUnusedDataFor: 0, // disable cache
+      keepUnusedDataFor: 0 // disable cache
     }),
     getUserSteps: builder.query<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({
       query: (args) => `/api/user/${args.user}/steps/${args.dateStart}/${args.dateEnd}/`,
-      keepUnusedDataFor: 0, // disable cache
+      keepUnusedDataFor: 0 // disable cache
       // query: ({ baseId, someFilterIds, sortBy, page }) => {
       // },
       // serializeQueryArgs: ({ endpointName }) => {
@@ -64,9 +64,9 @@ export const apiService = createApi({
         return response.map((item) => ({
           ...item,
           colortext_hex: powerBuilderColorToHex(item.colortext),
-          colorbackground_hex: powerBuilderColorToHex(item.colorbackground),
+          colorbackground_hex: powerBuilderColorToHex(item.colorbackground)
         }));
-      },
+      }
     }),
     getUserYears: builder.query<number[], IUserYearClick>({
       query: (args) => `/api/user/${args.user}/years/`,
@@ -75,14 +75,14 @@ export const apiService = createApi({
           return [];
         }
         return response.map((item) => item.year);
-      },
-    }),
-  }),
+      }
+    })
+  })
 });
 
 export const {
   useGetCalendarQuery,
   useGetUserStepsQuery,
   useGetUserTypeLifeQuery,
-  useGetUserYearsQuery,
+  useGetUserYearsQuery
 } = apiService;

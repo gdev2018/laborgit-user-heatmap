@@ -9,8 +9,7 @@ interface SelectedChipsProps {
 
 const SelectedChips = ({ filters }: SelectedChipsProps) => {
   console.log("SelectedChips enter");
-  const labelDates =
-    filters.filterDates?.start + " - " + filters.filterDates?.end;
+  const labelDates = filters.filterDates?.start + " - " + filters.filterDates?.end;
 
   return (
     <Stack direction="row" spacing={1} my={2}>

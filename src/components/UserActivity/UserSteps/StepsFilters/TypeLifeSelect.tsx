@@ -1,12 +1,6 @@
 import { ITypeLife } from "../../types";
 import React from "react";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
 interface TypeLifeSelectProps {
   typeLife?: ITypeLife[];

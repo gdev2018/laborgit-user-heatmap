@@ -27,9 +27,7 @@ const YearsFilter = ({ years, selectedYear, onClick }: YearsFilterProps) => {
       {years.map((year) => (
         <div key={year} style={{ marginTop: "1rem" }}>
           <Button
-            variant={
-              year.toString() === selectedYear.toString() ? "contained" : "text"
-            }
+            variant={year.toString() === selectedYear.toString() ? "contained" : "text"}
             onClick={() => onClick(year)}
             size={"medium"}
             sx={{ fontSize: "1rem" }}

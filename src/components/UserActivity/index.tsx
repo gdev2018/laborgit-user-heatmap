@@ -67,12 +67,8 @@ const UserActivity = ({ user }: IUserYearClick) => {
   console.log("UserActivity enter");
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [selectedDateStart, setSelectedDateStart] = useState<string>(
-    `${currentYear}-01-01`,
-  );
-  const [selectedDateEnd, setSelectedDateEnd] = useState<string>(
-    `${currentYear + 1}-01-01`,
-  );
+  const [selectedDateStart, setSelectedDateStart] = useState<string>(`${currentYear}-01-01`);
+  const [selectedDateEnd, setSelectedDateEnd] = useState<string>(`${currentYear + 1}-01-01`);
 
   const [filters, setFilters] = useState<Filters>(filtersInitial);
 
@@ -104,7 +100,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
         filterDates: null,
       }));
     },
-    [setSelectedYear, setSelectedDateStart, setSelectedDateEnd],
+    [setSelectedYear, setSelectedDateStart, setSelectedDateEnd]
   );
 
   const handleOnDeleteDates = useCallback(() => {
@@ -152,7 +148,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
         console.error("The value object does not contain a valid date field.");
       }
     },
-    [handleOnDeleteDates],
+    [handleOnDeleteDates]
   );
 
   const handleOnClickTypeLife = (typeLife: IDictWithColor) => {
@@ -252,11 +248,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
           {stepsIsLoading || stepsError !== undefined ? (
             <Skeleton width={600} height={40} />
           ) : (
-            <YearsFilter
-              years={yearsData}
-              selectedYear={selectedYear}
-              onClick={handleYearSelect}
-            />
+            <YearsFilter years={yearsData} selectedYear={selectedYear} onClick={handleYearSelect} />
           )}
         </div>
       </div>

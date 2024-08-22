@@ -2,13 +2,7 @@ import { IServerResponse } from "../../../types";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { Box, Divider, Skeleton, Typography } from "@mui/material";
-import {
-  IDict,
-  IDictWithColor,
-  ITotalResultsSteps,
-  ITypeLife,
-  IUserStep
-} from "../types";
+import { IDict, IDictWithColor, ITotalResultsSteps, ITypeLife, IUserStep } from "../types";
 import StepCard from "./StepCard";
 import React from "react";
 
@@ -33,16 +27,12 @@ const groupAndSortTasksByDate = (tasks: IUserStep[]) => {
     {} as Record<string, IUserStep[]>
   );
   Object.keys(groups).forEach((key) => {
-    groups[key].sort(
-      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
-    );
+    groups[key].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
   });
   return groups;
 };
 
-const getTypeLifeColorsMapping = (
-  typeLife: ITypeLife[] | undefined
-): Record<string, string> => {
+const getTypeLifeColorsMapping = (typeLife: ITypeLife[] | undefined): Record<string, string> => {
   const typeLifeColors: Record<number, string> = {};
   typeLife?.forEach((item) => {
     typeLifeColors[item.id] = item.colorbackground_hex || "";
@@ -76,10 +66,7 @@ const UserSteps = ({
   return (
     <div>
       {Object.entries(groupedTasks).map(([date, steps], index) => (
-        <Box
-          key={"key" + index}
-          sx={{ marginBottom: "20px", backgroundColor: "transparent" }}
-        >
+        <Box key={"key" + index} sx={{ marginBottom: "20px", backgroundColor: "transparent" }}>
           <Divider textAlign="left" variant="middle">
             <Typography variant="h6">{date} </Typography>
           </Divider>
