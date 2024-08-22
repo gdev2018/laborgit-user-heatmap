@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react";
 import UserActivity from "./components/UserActivity";
-// import "./reset.css";
-import "./normalize.css";
+import "./reset.css";
+// import "./normalize.css";
 // import "./App.css";
 
 const MemoizedUserActivityComponent = React.memo(UserActivity);

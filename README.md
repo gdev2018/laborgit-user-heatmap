@@ -10,12 +10,14 @@ package.json:
 }
 ```
 ```shell
-npm i --no-install-peers
+npm install
+npm update
 ```
 
 or
 
 without package.json
 ```shell
-npm install laborgit-user-heatmap --no-install-peers
+npm install laborgit-user-heatmap
+npm update laborgit-user-heatmap
 ```
