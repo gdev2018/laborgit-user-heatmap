@@ -68,7 +68,8 @@
     "vite": "^5.3.3"
   },
   "prettier": {
-    "tabWidth": 2,
+    "endOfLine": "crlf",
+    "printWidth": 100,
     "trailingComma": "none"
   }
 }

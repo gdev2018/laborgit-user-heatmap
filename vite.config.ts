@@ -17,20 +17,17 @@ export default defineConfig({
   build: {
     outDir: "./dist",
     rollupOptions: {
-      input: "src/main.tsx", // specify the entry point of your application
+      input: "src/main.tsx",
       output: {
-        dir: "dist", // specify the output directory
+        dir: "dist",
         entryFileNames: `app_calendar_heatmap.bundle.js`, // specify the output file
-        format: "iife", // specify the format of the output file
+        format: "iife",
         name: "app_calendar_heatmap", // specify the name of the global variable
       },
     },
     commonjsOptions: {
       transformMixedEsModules: true,
-      exclude: [
-        "node_modules/lodash-es/**",
-        "node_modules/@types/lodash-es/**",
-      ],
+      exclude: ["node_modules/lodash-es/**", "node_modules/@types/lodash-es/**"],
     },
     assetsInlineLimit: 10240, // 10KB
   },
