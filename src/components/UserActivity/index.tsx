@@ -3,7 +3,7 @@ import {
   useGetCalendarQuery,
   useGetUserStepsQuery,
   useGetUserTypeLifeQuery,
-  useGetUserYearsQuery,
+  useGetUserYearsQuery
 } from "../../redux";
 import UserSteps from "./UserSteps";
 import YearsFilter from "./YearsFilter";
@@ -21,7 +21,7 @@ interface HeatmapValue {
 const filtersInitial: Filters = {
   filterDates: null,
   filterTypeLife: null,
-  filterTask: null,
+  filterTask: null
 };
 
 // const dataMock = [
@@ -73,21 +73,21 @@ const UserActivity = ({ user }: IUserYearClick) => {
   const [filters, setFilters] = useState<Filters>(filtersInitial);
 
   const { data: typeLifeData } = useGetUserTypeLifeQuery({
-    user,
+    user
   });
 
   const {
     data: stepsData,
     error: stepsError,
-    isLoading: stepsIsLoading,
+    isLoading: stepsIsLoading
   } = useGetUserStepsQuery({
     user,
     dateStart: selectedDateStart,
-    dateEnd: selectedDateEnd,
+    dateEnd: selectedDateEnd
   });
 
   const { data: yearsData } = useGetUserYearsQuery({
-    user,
+    user
   });
 
   const handleYearSelect = useCallback(
@@ -97,7 +97,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
       setSelectedDateEnd(`${Number(year) + 1}-01-01`);
       setFilters((prevState) => ({
         ...prevState,
-        filterDates: null,
+        filterDates: null
       }));
     },
     [setSelectedYear, setSelectedDateStart, setSelectedDateEnd]
@@ -107,7 +107,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
     handleYearSelect(currentYear);
     setFilters((prevState) => ({
       ...prevState,
-      filterDates: null,
+      filterDates: null
     }));
   }, [currentYear, handleYearSelect]);
 
@@ -141,8 +141,8 @@ const UserActivity = ({ user }: IUserYearClick) => {
           filterDates: {
             start: startDateString,
             end: endDateString,
-            onDelete: handleOnDeleteDates,
-          },
+            onDelete: handleOnDeleteDates
+          }
         }));
       } else {
         console.error("The value object does not contain a valid date field.");
@@ -158,14 +158,14 @@ const UserActivity = ({ user }: IUserYearClick) => {
         id: typeLife.id,
         name: typeLife.name,
         color: typeLife.color,
-        onDelete: handleOnDeleteTypeLife,
-      },
+        onDelete: handleOnDeleteTypeLife
+      }
     }));
   };
   const handleOnDeleteTypeLife = function () {
     setFilters((prevState) => ({
       ...prevState,
-      filterTypeLife: null,
+      filterTypeLife: null
     }));
   };
 
@@ -175,14 +175,14 @@ const UserActivity = ({ user }: IUserYearClick) => {
       filterTask: {
         id: task.id,
         name: task.name,
-        onDelete: handleOnDeleteTask,
-      },
+        onDelete: handleOnDeleteTask
+      }
     }));
   };
   const handleOnDeleteTask = function () {
     setFilters((prevState) => ({
       ...prevState,
-      filterTask: null,
+      filterTask: null
     }));
   };
 
@@ -190,10 +190,10 @@ const UserActivity = ({ user }: IUserYearClick) => {
   const {
     data: calendarData,
     error: calendarError,
-    isLoading: calendarIsLoading,
+    isLoading: calendarIsLoading
   } = useGetCalendarQuery({
     user,
-    year: selectedYear,
+    year: selectedYear
   });
 
   if (calendarIsLoading) {
@@ -213,7 +213,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
           className="inner-flex-item"
           style={{
             flex: 1,
-            overflow: "auto",
+            overflow: "auto"
           }}
         >
           {stepsIsLoading || stepsError !== undefined ? (
@@ -222,7 +222,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
             <TotalHeader
               totalResults={
                 // TODO totalResults not cleared on year change
-                stepsIsLoading ? null : (stepsData?.totalResults ?? null)
+                stepsIsLoading ? null : stepsData?.totalResults ?? null
               }
               year={selectedYear}
             />

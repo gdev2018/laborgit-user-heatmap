@@ -26,5 +26,5 @@
     "baseUrl": "src",
     "downlevelIteration": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx"],
+  "include": ["./**/*.ts", "./**/*.tsx"]
 }
