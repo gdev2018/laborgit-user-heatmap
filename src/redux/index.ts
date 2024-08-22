@@ -1,2 +1,2 @@
-export * from "./store.ts";
-export * from "./apiService.ts";
+export * from "./store";
+export * from "./apiService";
