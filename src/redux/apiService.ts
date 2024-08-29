@@ -24,10 +24,15 @@ export function powerBuilderColorToHex(pbColor: number): string {
   return "#" + rHex + gHex + bHex;
 }
 
+const currentDomain = window.location.hostname;
+const baseUrl = currentDomain === "localhost" ? "https://drupal9" : `https://${currentDomain}`;
+console.log("baseUrl=", baseUrl);
+
 export const apiService = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_BASE_URL}`
+    baseUrl: baseUrl
+    // baseUrl: `${import.meta.env.VITE_API_BASE_URL}`
     // baseUrl: `${process.env.VITE_API_BASE_URL}`
     // baseUrl: BASE_URL
   }),
