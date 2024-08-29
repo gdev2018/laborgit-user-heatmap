@@ -1,6 +1,6 @@
 {
   "name": "laborgit-user-heatmap",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "User activity heatmap for the LaborGit project",
   "main": "dist/app_calendar_heatmap.bundle.js",
   "module": "dist/app_calendar_heatmap.bundle.js",
