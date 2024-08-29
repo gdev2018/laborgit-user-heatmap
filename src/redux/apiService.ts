@@ -9,9 +9,6 @@ import {
   IUserYearClick
 } from "../components/UserActivity/types";
 
-// const BASE_URL = "https://laborgit.ru";
-// const BASE_URL = "https://drupal9";
-
 export function powerBuilderColorToHex(pbColor: number): string {
   const r: number = pbColor & 0xff; // Красный компонент находится в младшем байте
   const g: number = (pbColor >> 8) & 0xff; // Зеленый компонент смещается на 8 бит вправо
