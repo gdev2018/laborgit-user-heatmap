@@ -36,7 +36,8 @@ export const apiService = createApi({
   endpoints: (builder) => ({
     // TODO change string to another type
     getCalendar: builder.query<ICalendarDate[], IUserYearClick>({
-      query: (args) => `/api/user/${args.user}/calendar/${args.year}/`,
+      query: (args) =>
+        `/api/user/${args.user}/calendar/${args.year}/${args.typeLife}/${args.taskId}/`,
       keepUnusedDataFor: 0 // disable cache
     }),
     getUserSteps: builder.query<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({

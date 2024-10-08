@@ -87,7 +87,9 @@ const UserActivity = ({ user }: IUserYearClick) => {
     isLoading: calendarIsLoading
   } = useGetCalendarQuery({
     user,
-    year: selectedYear
+    year: selectedYear,
+    typeLife: filters.filterTypeLife?.id || 0,
+    taskId: filters.filterTask?.id || 0
   });
 
   const {
