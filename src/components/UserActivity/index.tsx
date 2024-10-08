@@ -76,6 +76,20 @@ const UserActivity = ({ user }: IUserYearClick) => {
     user
   });
 
+  const { data: yearsData } = useGetUserYearsQuery({
+    user
+  });
+
+  // todo set skeleton if isLoading
+  const {
+    data: calendarData,
+    error: calendarError,
+    isLoading: calendarIsLoading
+  } = useGetCalendarQuery({
+    user,
+    year: selectedYear
+  });
+
   const {
     data: stepsData,
     error: stepsError,
@@ -83,11 +97,9 @@ const UserActivity = ({ user }: IUserYearClick) => {
   } = useGetUserStepsQuery({
     user,
     dateStart: selectedDateStart,
-    dateEnd: selectedDateEnd
-  });
-
-  const { data: yearsData } = useGetUserYearsQuery({
-    user
+    dateEnd: selectedDateEnd,
+    typeLife: filters.filterTypeLife?.id || 0,
+    taskId: filters.filterTask?.id || 0
   });
 
   const handleYearSelect = useCallback(
@@ -185,16 +197,6 @@ const UserActivity = ({ user }: IUserYearClick) => {
       filterTask: null
     }));
   };
-
-  // todo set sceleton if isLoading
-  const {
-    data: calendarData,
-    error: calendarError,
-    isLoading: calendarIsLoading
-  } = useGetCalendarQuery({
-    user,
-    year: selectedYear
-  });
 
   if (calendarIsLoading) {
     return <>Loading user data...</>;

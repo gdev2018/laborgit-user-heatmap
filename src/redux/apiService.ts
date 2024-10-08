@@ -40,7 +40,8 @@ export const apiService = createApi({
       keepUnusedDataFor: 0 // disable cache
     }),
     getUserSteps: builder.query<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({
-      query: (args) => `/api/user/${args.user}/steps/${args.dateStart}/${args.dateEnd}/`,
+      query: (args) =>
+        `/api/user/${args.user}/steps/${args.dateStart}/${args.dateEnd}/${args.typeLife}/${args.taskId}/`,
       keepUnusedDataFor: 0 // disable cache
       // query: ({ baseId, someFilterIds, sortBy, page }) => {
       // },

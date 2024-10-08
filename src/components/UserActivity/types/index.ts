@@ -3,6 +3,8 @@ export interface IUserYearClick {
   year?: number;
   dateStart?: string;
   dateEnd?: string;
+  typeLife?: number;
+  taskId?: number;
   onClick?: (value: object) => void;
 }
 
