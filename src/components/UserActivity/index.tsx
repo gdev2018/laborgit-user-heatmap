@@ -22,7 +22,8 @@ interface HeatmapValue {
 const filtersInitial: Filters = {
   filterDates: null,
   filterTypeLife: null,
-  filterTask: null
+  filterTask: null,
+  mainEventsOnly: false
 };
 
 // const dataMock = [
@@ -90,7 +91,8 @@ const UserActivity = ({ user }: IUserYearClick) => {
     user,
     year: selectedYear,
     typeLife: filters.filterTypeLife?.id || 0,
-    taskId: filters.filterTask?.id || 0
+    taskId: filters.filterTask?.id || 0,
+    mainEventsOnly: filters.mainEventsOnly
   });
 
   const {
@@ -102,7 +104,8 @@ const UserActivity = ({ user }: IUserYearClick) => {
     dateStart: selectedDateStart,
     dateEnd: selectedDateEnd,
     typeLife: filters.filterTypeLife?.id || 0,
-    taskId: filters.filterTask?.id || 0
+    taskId: filters.filterTask?.id || 0,
+    mainEventsOnly: filters.mainEventsOnly
   });
 
   const handleYearSelect = useCallback(
@@ -170,16 +173,16 @@ const UserActivity = ({ user }: IUserYearClick) => {
     console.log("typeLife=", typeLife);
     setFilters((prevState) => ({
       ...prevState,
-      // filterTypeLife: { ...typeLife, onDelete: handleOnDeleteTypeLife } as FilterTypeLife
       filterTypeLife: typeLife
     }));
   };
-  // const handleOnDeleteTypeLife = function () {
-  //   setFilters((prevState) => ({
-  //     ...prevState,
-  //     filterTypeLife: null
-  //   }));
-  // };
+
+  const handleOnChangeMainEventsOnly = (value: boolean) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      mainEventsOnly: value
+    }));
+  };
 
   const handleOnClickTask = (task: IDict) => {
     setFilters((prevState) => ({
@@ -239,6 +242,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
               typeLife={typeLifeData}
               filters={filters}
               onChangeTypeLifeSelect={handleOnClickTypeLife}
+              onChangeMainEventsOnly={handleOnChangeMainEventsOnly}
             />
           </Box>
 

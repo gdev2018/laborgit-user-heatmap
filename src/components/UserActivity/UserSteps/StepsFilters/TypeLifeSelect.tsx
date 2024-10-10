@@ -40,7 +40,7 @@ const TypeLifeSelect = ({ initValue, typeLife = [], onChange }: TypeLifeSelectPr
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+    <FormControl sx={{ mt: 1, minWidth: 200 }} size="small">
       <InputLabel id="select-label">Choose TypeLife</InputLabel>
       <Select
         labelId="typelife-select-label"
@@ -50,10 +50,10 @@ const TypeLifeSelect = ({ initValue, typeLife = [], onChange }: TypeLifeSelectPr
         onChange={handleChange}
         // displayEmpty
         sx={{
-          borderRadius: "8px",
-          "& .MuiSelect-select": {
-            borderRadius: "8px"
-          }
+          borderRadius: "12px"
+          // "& .MuiSelect-select": {
+          //   borderRadius: "12px"
+          // }
         }}
         endAdornment={
           value && (

@@ -5,6 +5,7 @@ export interface IUserYearClick {
   dateEnd?: string;
   typeLife?: number;
   taskId?: number;
+  mainEventsOnly?: boolean;
   onClick?: (value: object) => void;
 }
 

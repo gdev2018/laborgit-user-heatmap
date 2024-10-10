@@ -37,12 +37,12 @@ export const apiService = createApi({
     // TODO change string to another type
     getCalendar: builder.query<ICalendarDate[], IUserYearClick>({
       query: (args) =>
-        `/api/user/${args.user}/calendar/${args.year}/${args.typeLife}/${args.taskId}/`,
+        `/api/user/${args.user}/calendar/${args.year}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
       keepUnusedDataFor: 0 // disable cache
     }),
     getUserSteps: builder.query<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({
       query: (args) =>
-        `/api/user/${args.user}/steps/${args.dateStart}/${args.dateEnd}/${args.typeLife}/${args.taskId}/`,
+        `/api/user/${args.user}/steps/${args.dateStart}/${args.dateEnd}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
       keepUnusedDataFor: 0 // disable cache
       // query: ({ baseId, someFilterIds, sortBy, page }) => {
       // },
