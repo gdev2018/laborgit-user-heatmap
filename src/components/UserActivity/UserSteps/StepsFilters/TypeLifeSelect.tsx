@@ -1,32 +1,76 @@
 import { ITypeLife } from "../../types";
-import React from "react";
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import React, { useEffect } from "react";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent
+} from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Nullable } from "../../../../types";
 
 interface TypeLifeSelectProps {
-  typeLife?: ITypeLife[];
+  initValue: Nullable<string>;
+  typeLife: ITypeLife[];
+  onChange: (selectedItem: Nullable<ITypeLife>) => void;
 }
 
-const TypeLifeSelect = ({ typeLife = [] }: TypeLifeSelectProps) => {
+const TypeLifeSelect = ({ initValue, typeLife = [], onChange }: TypeLifeSelectProps) => {
   console.log("TypeLifeSelect enter");
-  const [value, setValue] = React.useState("");
+  console.log("TypeLifeSelect initValue=", initValue);
+  const [value, setValue] = React.useState<string>(initValue || "");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value);
+  useEffect(() => {
+    setValue(initValue || "");
+  }, [initValue]);
+
+  const handleChange = (event: SelectChangeEvent<string>) => {
+    const selectedValue = event.target.value;
+    const selectedItem = typeLife.find((item) => Number(item.id) === Number(selectedValue)) || null;
+    setValue(selectedValue);
+    onChange(selectedItem);
+  };
+
+  const handleClear = () => {
+    setValue("");
+    onChange(null);
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <InputLabel id="select-label">TypeLife</InputLabel>
+    <FormControl sx={{ m: 1, minWidth: 200 }} size="small">
+      <InputLabel id="select-label">Choose TypeLife</InputLabel>
       <Select
-        labelId="select-label"
-        id="demo-select-small"
+        labelId="typelife-select-label"
+        id="typelife-select"
         value={value}
-        label="TypeLife"
+        label="Choose TypeLife"
         onChange={handleChange}
+        // displayEmpty
+        sx={{
+          borderRadius: "8px",
+          "& .MuiSelect-select": {
+            borderRadius: "8px"
+          }
+        }}
+        endAdornment={
+          value && (
+            <InputAdornment position="end">
+              <IconButton onClick={handleClear} size="small" sx={{ mr: 1 }}>
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            </InputAdornment>
+          )
+        }
       >
-        {typeLife.map((item) => (
-          <MenuItem value={item.id} key={item.id}>
-            {item.typelife}
+        <MenuItem value="" disabled>
+          Choose TypeLife
+        </MenuItem>
+        {typeLife.map(({ id, typelife }) => (
+          <MenuItem value={id} key={id}>
+            {typelife}
           </MenuItem>
         ))}
       </Select>

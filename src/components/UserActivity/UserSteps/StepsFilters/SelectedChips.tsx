@@ -38,34 +38,34 @@ const SelectedChips = ({ filters }: SelectedChipsProps) => {
           onDelete={filters.filterDates.onDelete}
         />
       )}
-      {filters.filterTypeLife && (
-        <Chip
-          label={filters.filterTypeLife.name}
-          sx={{
-            bgcolor: filters.filterTypeLife.color,
-            color: "black",
-            "&:hover": {
-              backgroundColor: filters.filterTypeLife.color // Prevent background color change
-            }
-          }}
-          deleteIcon={
-            <Box
-              sx={{
-                borderRadius: "50%",
-                backgroundColor: "white",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 18,
-                height: 18
-              }}
-            >
-              <HighlightOffRoundedIcon sx={{ fill: "#005bff" }} />
-            </Box>
-          }
-          onDelete={filters.filterTypeLife.onDelete}
-        />
-      )}
+      {/*{filters.filterTypeLife && (*/}
+      {/*  <Chip*/}
+      {/*    label={filters.filterTypeLife.typelife}*/}
+      {/*    sx={{*/}
+      {/*      bgcolor: filters.filterTypeLife.colorbackground_hex,*/}
+      {/*      color: "black",*/}
+      {/*      "&:hover": {*/}
+      {/*        backgroundColor: filters.filterTypeLife.colorbackground_hex // Prevent background color change*/}
+      {/*      }*/}
+      {/*    }}*/}
+      {/*    deleteIcon={*/}
+      {/*      <Box*/}
+      {/*        sx={{*/}
+      {/*          borderRadius: "50%",*/}
+      {/*          backgroundColor: "white",*/}
+      {/*          display: "inline-flex",*/}
+      {/*          alignItems: "center",*/}
+      {/*          justifyContent: "center",*/}
+      {/*          width: 18,*/}
+      {/*          height: 18*/}
+      {/*        }}*/}
+      {/*      >*/}
+      {/*        <HighlightOffRoundedIcon sx={{ fill: "#005bff" }} />*/}
+      {/*      </Box>*/}
+      {/*    }*/}
+      {/*    onDelete={filters.filterTypeLife.onDelete}*/}
+      {/*  />*/}
+      {/*)}*/}
       {filters.filterTask && (
         <Chip
           label={filters.filterTask.name}

@@ -6,7 +6,7 @@ import React from "react";
 
 export interface Filters {
   filterDates: Nullable<FilterDates>;
-  filterTypeLife: Nullable<FilterBase & { color: string }>;
+  filterTypeLife: Nullable<ITypeLife>;
   filterTask: Nullable<FilterBase>;
 }
 
@@ -19,22 +19,31 @@ export interface FilterDates {
   end: string;
   onDelete: () => void;
 }
+// export interface FilterTypeLife extends ITypeLife {
+//   onDelete: () => void;
+// }
 
 interface StepsFiltersProps {
   typeLife?: ITypeLife[];
   filters: Filters;
+  onChangeTypeLifeSelect: (selectedItem: Nullable<ITypeLife>) => void;
 }
 
-const StepsFilters = ({ typeLife = [], filters }: StepsFiltersProps) => {
+const StepsFilters = ({ typeLife = [], filters, onChangeTypeLifeSelect }: StepsFiltersProps) => {
   console.log("StepsFilters enter");
   console.log("StepsFilters filters=", filters);
+
   return (
-    // <div style={{ display: "flex", flexDirection: "row" }}>
-    <>
-      <TypeLifeSelect typeLife={typeLife} />
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      {/*<>*/}
+      <TypeLifeSelect
+        typeLife={typeLife}
+        initValue={String(filters.filterTypeLife?.id || "")}
+        onChange={onChangeTypeLifeSelect}
+      />
       <SelectedChips filters={filters} />
-    </>
-    // </div>
+      {/*</>*/}
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import { Card, CardContent, Chip, Stack, Tooltip, Typography } from "@mui/material";
-import { IDict, IDictWithColor, IUserStep } from "../../types";
+import { IDict, ITypeLife, IUserStep } from "../../types";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import CommitOutlinedIcon from "@mui/icons-material/CommitOutlined";
 import humanizeDuration from "humanize-duration";
@@ -7,8 +7,8 @@ import React from "react";
 
 interface StepCardProps {
   userStep: IUserStep;
-  typeLifeColor: string;
-  onClickTypeLife: (typeLife: IDictWithColor) => void;
+  typeLife: ITypeLife;
+  onClickTypeLife: (typeLife: ITypeLife) => void;
   onClickTask: (task: IDict) => void;
 }
 
@@ -23,7 +23,7 @@ const formatStartFinishTimes = (userStep: IUserStep): string => {
   return `${startTime} - ${finishTime}`;
 };
 
-const StepCard = ({ userStep, typeLifeColor, onClickTypeLife, onClickTask }: StepCardProps) => {
+const StepCard = ({ userStep, typeLife, onClickTypeLife, onClickTask }: StepCardProps) => {
   console.log("StepCard enter");
   const startFinishTimes = formatStartFinishTimes(userStep);
   const tooltipTitle = userStep.mainevent ? "This step is Main event" : "";
@@ -67,19 +67,13 @@ const StepCard = ({ userStep, typeLifeColor, onClickTypeLife, onClickTask }: Ste
                 size="small"
                 label={userStep.typelife}
                 sx={{
-                  bgcolor: typeLifeColor,
+                  bgcolor: typeLife.colorbackground_hex,
                   color: "black",
                   "&:hover": {
-                    backgroundColor: typeLifeColor // Prevent background color change
+                    backgroundColor: typeLife.colorbackground_hex // Prevent background color change
                   }
                 }}
-                onClick={() =>
-                  onClickTypeLife({
-                    id: userStep.typelifeid,
-                    name: userStep.typelife,
-                    color: typeLifeColor
-                  })
-                }
+                onClick={() => onClickTypeLife(typeLife)}
               />
               <Chip
                 size="small"

@@ -2,7 +2,7 @@ import { IServerResponse } from "../../../types";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import { Box, Divider, Skeleton, Typography } from "@mui/material";
-import { IDict, IDictWithColor, ITotalResultsSteps, ITypeLife, IUserStep } from "../types";
+import { IDict, ITotalResultsSteps, ITypeLife, IUserStep } from "../types";
 import StepCard from "./StepCard";
 import React from "react";
 
@@ -11,7 +11,7 @@ interface UserStepsProps {
   error: FetchBaseQueryError | SerializedError | undefined;
   isLoading: boolean;
   typeLife?: ITypeLife[];
-  onClickTypeLife: (typeLife: IDictWithColor) => void;
+  onClickTypeLife: (typeLife: ITypeLife) => void;
   onClickTask: (task: IDict) => void;
 }
 const groupAndSortTasksByDate = (tasks: IUserStep[]) => {
@@ -32,12 +32,12 @@ const groupAndSortTasksByDate = (tasks: IUserStep[]) => {
   return groups;
 };
 
-const getTypeLifeColorsMapping = (typeLife: ITypeLife[] | undefined): Record<string, string> => {
-  const typeLifeColors: Record<number, string> = {};
+const getTypeLifeItems = (typeLife: ITypeLife[] | undefined): Record<number, ITypeLife> => {
+  const typeLifeItems: Record<number, ITypeLife> = {};
   typeLife?.forEach((item) => {
-    typeLifeColors[item.id] = item.colorbackground_hex || "";
+    typeLifeItems[item.id] = item;
   });
-  return typeLifeColors;
+  return typeLifeItems;
 };
 
 const UserSteps = ({
@@ -61,7 +61,7 @@ const UserSteps = ({
     return <div>no data</div>;
   }
   const groupedTasks = groupAndSortTasksByDate(data.content);
-  const typeLifeColors = getTypeLifeColorsMapping(typeLife);
+  const typeLifeItems = getTypeLifeItems(typeLife);
 
   return (
     <div>
@@ -75,7 +75,7 @@ const UserSteps = ({
             <StepCard
               key={step.start}
               userStep={step}
-              typeLifeColor={typeLifeColors[step.typelifeid] || "primary"}
+              typeLife={typeLifeItems[step.typelifeid]}
               onClickTypeLife={onClickTypeLife}
               onClickTask={onClickTask}
             />

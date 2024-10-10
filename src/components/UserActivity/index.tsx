@@ -9,9 +9,10 @@ import UserSteps from "./UserSteps";
 import YearsFilter from "./YearsFilter";
 import TotalHeader from "./TotalHeader";
 import Heatmap from "./Heatmap";
-import { IDict, IDictWithColor, IUserYearClick } from "./types";
+import { IDict, ITypeLife, IUserYearClick } from "./types";
 import { Box, Skeleton } from "@mui/material";
 import StepsFilters, { Filters } from "./UserSteps/StepsFilters";
+import { Nullable } from "../../types";
 
 interface HeatmapValue {
   date?: string;
@@ -165,23 +166,20 @@ const UserActivity = ({ user }: IUserYearClick) => {
     [handleOnDeleteDates]
   );
 
-  const handleOnClickTypeLife = (typeLife: IDictWithColor) => {
+  const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) => {
+    console.log("typeLife=", typeLife);
     setFilters((prevState) => ({
       ...prevState,
-      filterTypeLife: {
-        id: typeLife.id,
-        name: typeLife.name,
-        color: typeLife.color,
-        onDelete: handleOnDeleteTypeLife
-      }
+      // filterTypeLife: { ...typeLife, onDelete: handleOnDeleteTypeLife } as FilterTypeLife
+      filterTypeLife: typeLife
     }));
   };
-  const handleOnDeleteTypeLife = function () {
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTypeLife: null
-    }));
-  };
+  // const handleOnDeleteTypeLife = function () {
+  //   setFilters((prevState) => ({
+  //     ...prevState,
+  //     filterTypeLife: null
+  //   }));
+  // };
 
   const handleOnClickTask = (task: IDict) => {
     setFilters((prevState) => ({
@@ -193,6 +191,7 @@ const UserActivity = ({ user }: IUserYearClick) => {
       }
     }));
   };
+
   const handleOnDeleteTask = function () {
     setFilters((prevState) => ({
       ...prevState,
@@ -236,7 +235,11 @@ const UserActivity = ({ user }: IUserYearClick) => {
           <Heatmap data={calendarData} onClick={handleOnClickHeatmap} />
 
           <Box ml={4}>
-            <StepsFilters typeLife={typeLifeData} filters={filters} />
+            <StepsFilters
+              typeLife={typeLifeData}
+              filters={filters}
+              onChangeTypeLifeSelect={handleOnClickTypeLife}
+            />
           </Box>
 
           <UserSteps
