@@ -34,15 +34,9 @@ export const apiService = createApi({
     // baseUrl: BASE_URL
   }),
   endpoints: (builder) => ({
-    // TODO change string to another type
     getCalendar: builder.query<ICalendarDate[], IUserYearClick>({
       query: (args) =>
-        `/api/user/${args.user}/calendar/${args.year}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
-      keepUnusedDataFor: 0 // disable cache
-    }),
-    getUserSteps: builder.query<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({
-      query: (args) =>
-        `/api/user/${args.user}/steps/${args.dateStart}/${args.dateEnd}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
+        `/api/user/${args.userId}/calendar/${args.year}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
       keepUnusedDataFor: 0 // disable cache
       // query: ({ baseId, someFilterIds, sortBy, page }) => {
       // },
@@ -59,8 +53,24 @@ export const apiService = createApi({
       //   return currentArg !== previousArg; // Force refetch if arguments differ
       // },
     }),
+    getUserSteps: builder.mutation<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({
+      query: (args) => ({
+        url: `/api/user/${args.userId}/steps/`,
+        method: "POST",
+        body: {
+          userId: args.userId,
+          dateStart: args.dateStart,
+          dateEnd: args.dateEnd,
+          typeLife: args.typeLife,
+          taskId: args.taskId,
+          mainEventsOnly: args.mainEventsOnly ? 1 : 0,
+          page: args.page,
+          itemsPerPage: args.itemsPerPage
+        }
+      })
+    }),
     getUserTypeLife: builder.query<ITypeLife[], IUserYearClick>({
-      query: (args) => `/api/user/${args.user}/typelife/`,
+      query: (args) => `/api/user/${args.userId}/typelife/`,
       transformResponse: (response: ITypeLife[]) => {
         if (!Array.isArray(response)) {
           return [];
@@ -73,7 +83,7 @@ export const apiService = createApi({
       }
     }),
     getUserYears: builder.query<number[], IUserYearClick>({
-      query: (args) => `/api/user/${args.user}/years/`,
+      query: (args) => `/api/user/${args.userId}/years/`,
       transformResponse: (response: IUserYear[]) => {
         if (!Array.isArray(response)) {
           return [];
@@ -86,7 +96,7 @@ export const apiService = createApi({
 
 export const {
   useGetCalendarQuery,
-  useGetUserStepsQuery,
+  useGetUserStepsMutation,
   useGetUserTypeLifeQuery,
   useGetUserYearsQuery
 } = apiService;

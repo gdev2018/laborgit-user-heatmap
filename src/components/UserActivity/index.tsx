@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   useGetCalendarQuery,
-  useGetUserStepsQuery,
+  useGetUserStepsMutation,
   useGetUserTypeLifeQuery,
   useGetUserYearsQuery
 } from "../../redux";
@@ -65,7 +65,7 @@ const filtersInitial: Filters = {
 //   }
 // ] as ICalendarDate[];
 
-const UserActivity = ({ user }: IUserYearClick) => {
+const UserActivity = ({ userId }: IUserYearClick) => {
   console.log("UserActivity enter");
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
@@ -75,11 +75,11 @@ const UserActivity = ({ user }: IUserYearClick) => {
   const [filters, setFilters] = useState<Filters>(filtersInitial);
 
   const { data: typeLifeData } = useGetUserTypeLifeQuery({
-    user
+    userId
   });
 
   const { data: yearsData } = useGetUserYearsQuery({
-    user
+    userId
   });
 
   // todo set skeleton if isLoading
@@ -88,25 +88,36 @@ const UserActivity = ({ user }: IUserYearClick) => {
     error: calendarError,
     isLoading: calendarIsLoading
   } = useGetCalendarQuery({
-    user,
+    userId,
     year: selectedYear,
     typeLife: filters.filterTypeLife?.id || 0,
     taskId: filters.filterTask?.id || 0,
     mainEventsOnly: filters.mainEventsOnly
   });
 
-  const {
-    data: stepsData,
-    error: stepsError,
-    isLoading: stepsIsLoading
-  } = useGetUserStepsQuery({
-    user,
-    dateStart: selectedDateStart,
-    dateEnd: selectedDateEnd,
-    typeLife: filters.filterTypeLife?.id || 0,
-    taskId: filters.filterTask?.id || 0,
-    mainEventsOnly: filters.mainEventsOnly
-  });
+  const [getUserSteps, { data: stepsData, error: stepsError, isLoading: stepsIsLoading }] =
+    useGetUserStepsMutation();
+
+  useEffect(() => {
+    const fetchUserSteps = async () => {
+      try {
+        await getUserSteps({
+          userId,
+          dateStart: selectedDateStart,
+          dateEnd: selectedDateEnd,
+          typeLife: filters.filterTypeLife?.id || 0,
+          taskId: filters.filterTask?.id || 0,
+          mainEventsOnly: filters.mainEventsOnly,
+          page: 1,
+          itemsPerPage: 10
+        }).unwrap();
+      } catch (error) {
+        console.error("Failed to fetch user steps:", error);
+      }
+    };
+
+    fetchUserSteps();
+  }, [userId, selectedDateStart, selectedDateEnd, filters]);
 
   const handleYearSelect = useCallback(
     (year: number) => {

@@ -1,11 +1,14 @@
+// todo rename into RequestFilters or RequestBody
 export interface IUserYearClick {
-  user: number;
+  userId: number;
   year?: number;
   dateStart?: string;
   dateEnd?: string;
   typeLife?: number;
   taskId?: number;
   mainEventsOnly?: boolean;
+  page?: number;
+  itemsPerPage?: number;
   onClick?: (value: object) => void;
 }
 
@@ -59,8 +62,4 @@ export type ICalendar = ICalendarDate[];
 export interface IDict {
   id: number;
   name: string;
-}
-
-export interface IDictWithColor extends IDict {
-  color: string;
 }

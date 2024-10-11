@@ -28,7 +28,7 @@ const App: React.FC = () => {
     // <div style={{ minHeight: "300px", overflowY: "auto" }}>
     <>
       {renderError()}
-      <MemoizedUserActivityComponent user={userId === null ? 1 : userId} />
+      <MemoizedUserActivityComponent userId={userId === null ? 1 : userId} />
     </>
   );
 };
