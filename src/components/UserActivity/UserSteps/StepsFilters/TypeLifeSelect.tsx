@@ -1,14 +1,6 @@
 import { ITypeLife } from "../../types";
 import React, { useEffect } from "react";
-import {
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent
-} from "@mui/material";
+import { IconButton, InputAdornment, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Nullable } from "../../../../types";
 
@@ -40,41 +32,39 @@ const TypeLifeSelect = ({ initValue, typeLife = [], onChange }: TypeLifeSelectPr
   };
 
   return (
-    <FormControl sx={{ mt: 1, minWidth: 200 }} size="small">
-      <InputLabel id="select-label">Choose TypeLife</InputLabel>
-      <Select
-        labelId="typelife-select-label"
-        id="typelife-select"
-        value={value}
-        label="Choose TypeLife"
-        onChange={handleChange}
-        // displayEmpty
-        sx={{
-          borderRadius: "12px"
-          // "& .MuiSelect-select": {
-          //   borderRadius: "12px"
-          // }
-        }}
-        endAdornment={
-          value && (
-            <InputAdornment position="end">
-              <IconButton onClick={handleClear} size="small" sx={{ mr: 1 }}>
-                <ClearIcon fontSize="small" />
-              </IconButton>
-            </InputAdornment>
-          )
+    <Select
+      value={value}
+      size="small"
+      onChange={handleChange}
+      displayEmpty // This prop allows the placeholder to be displayed when value is empty
+      renderValue={(selected) => {
+        if (!selected) {
+          return <em>Choose TypeLife</em>; // Optionally render the placeholder text
         }
-      >
-        <MenuItem value="" disabled>
-          Choose TypeLife
+        const selectedItem = typeLife.find((item) => Number(item.id) === Number(selected));
+        return selectedItem ? `TypeLife: ${selectedItem.typelife}` : "";
+      }}
+      sx={{
+        borderRadius: "12px",
+        mt: 1,
+        minWidth: 200
+      }}
+      endAdornment={
+        value && (
+          <InputAdornment position="end">
+            <IconButton onClick={handleClear} size="small" sx={{ mr: 1 }}>
+              <ClearIcon fontSize="small" />
+            </IconButton>
+          </InputAdornment>
+        )
+      }
+    >
+      {typeLife.map(({ id, typelife }) => (
+        <MenuItem value={id} key={id}>
+          {typelife}
         </MenuItem>
-        {typeLife.map(({ id, typelife }) => (
-          <MenuItem value={id} key={id}>
-            {typelife}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+      ))}
+    </Select>
   );
 };
 
