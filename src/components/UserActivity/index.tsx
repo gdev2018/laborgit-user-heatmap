@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useGetCalendarQuery,
   useGetUserStepsMutation,
@@ -234,7 +234,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
           }}
         >
           {stepsIsLoading || stepsError !== undefined ? (
-            <Skeleton width={600} height={40} />
+            <Skeleton width={0} height={39} />
           ) : (
             <TotalHeader
               totalResults={
@@ -267,15 +267,16 @@ const UserActivity = ({ userId }: IUserYearClick) => {
           />
         </div>
         <div style={{ flex: 0, position: "sticky", top: 0 }}>
-          {stepsIsLoading || stepsError !== undefined ? (
-            <Skeleton width={600} height={40} />
-          ) : (
-            <YearsFilter years={yearsData} selectedYear={selectedYear} onClick={handleYearSelect} />
-          )}
+          {/*{stepsIsLoading || stepsError !== undefined ? (*/}
+          {/*  <Skeleton width={70} height={40} />*/}
+          {/*) : (*/}
+          <YearsFilter years={yearsData} selectedYear={selectedYear} onClick={handleYearSelect} />
+          {/*)}*/}
         </div>
       </div>
     );
   }
 };
 
-export default UserActivity;
+const UserActivityMemo = React.memo(UserActivity);
+export default UserActivityMemo;

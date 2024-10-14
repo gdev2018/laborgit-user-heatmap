@@ -50,7 +50,7 @@ const UserSteps = ({
 }: UserStepsProps) => {
   console.log("UserSteps enter");
   if (isLoading || !data) {
-    return <Skeleton height={200} />;
+    return <Skeleton height={0} />;
   }
 
   if (error) {
