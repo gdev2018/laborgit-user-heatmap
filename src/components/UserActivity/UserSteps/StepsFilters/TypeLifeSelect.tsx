@@ -46,8 +46,11 @@ const TypeLifeSelect = ({ initValue, typeLife = [], onChange }: TypeLifeSelectPr
       }}
       sx={{
         borderRadius: "12px",
-        mt: 1,
-        minWidth: 200
+        minWidth: 200,
+        "& .MuiSelect-select": {
+          paddingTop: "4.5px",
+          paddingBottom: "4.5px"
+        }
       }}
       endAdornment={
         value && (

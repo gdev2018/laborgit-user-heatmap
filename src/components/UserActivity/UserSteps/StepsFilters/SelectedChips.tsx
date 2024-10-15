@@ -12,7 +12,7 @@ const SelectedChips = ({ filters }: SelectedChipsProps) => {
   const labelDates = filters.filterDates?.start + " - " + filters.filterDates?.end;
 
   return (
-    <Stack direction="row" spacing={1} my={2}>
+    <Stack direction="row" spacing={1}>
       {filters.filterDates && (
         <Chip
           label={labelDates}

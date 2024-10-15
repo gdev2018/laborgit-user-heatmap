@@ -3,7 +3,7 @@ import TypeLifeSelect from "./TypeLifeSelect.tsx";
 import SelectedChips from "./SelectedChips.tsx";
 import { Nullable } from "../../../../types";
 import React, { useState } from "react";
-import { FormControlLabel } from "@mui/material";
+import { Box, FormControlLabel } from "@mui/material";
 import Switch from "@mui/material/Switch";
 
 export interface Filters {
@@ -48,8 +48,7 @@ const StepsFilters = ({
   };
 
   return (
-    // <div style={{ display: "flex", flexDirection: "row" }}>
-    <>
+    <Box sx={{ display: "flex", alignItems: "center", flexDirection: "row", my: 2 }}>
       <div style={{ display: "flex", alignItems: "center" }}>
         <TypeLifeSelect
           typeLife={typeLife}
@@ -65,8 +64,7 @@ const StepsFilters = ({
         />
       </div>
       <SelectedChips filters={filters} />
-    </>
-    ///*</div>*/
+    </Box>
   );
 };
 
