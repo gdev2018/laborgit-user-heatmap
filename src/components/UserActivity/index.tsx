@@ -11,20 +11,13 @@ import TotalHeader from "./TotalHeader";
 import Heatmap from "./Heatmap";
 import { IDict, ITypeLife, IUserYearClick } from "./types";
 import { Box, Skeleton } from "@mui/material";
-import StepsFilters, { Filters } from "./UserSteps/StepsFilters";
+import StepsFilters, { Filters, filtersInitial } from "./UserSteps/StepsFilters";
 import { Nullable } from "../../types";
 
 interface HeatmapValue {
   date?: string;
   [key: string]: any; // For other properties
 }
-
-const filtersInitial: Filters = {
-  filterDates: null,
-  filterTypeLife: null,
-  filterTask: null,
-  mainEventsOnly: false
-};
 
 // const dataMock = [
 //   {
@@ -213,6 +206,11 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     }));
   };
 
+  const handleResetFilters = () => {
+    handleYearSelect(currentYear);
+    setFilters(filtersInitial);
+  };
+
   if (calendarIsLoading) {
     return <>Loading user data...</>;
   }
@@ -254,6 +252,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
               filters={filters}
               onChangeTypeLifeSelect={handleOnClickTypeLife}
               onChangeMainEventsOnly={handleOnChangeMainEventsOnly}
+              onResetFilters={handleResetFilters}
             />
           </Box>
 

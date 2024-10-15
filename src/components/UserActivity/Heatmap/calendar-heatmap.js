@@ -33,13 +33,7 @@ const calendarHeatmap = {
     tooltip_padding: 15
   },
 
-  init: function (
-    data,
-    container,
-    color = "#ff4500",
-    overview = "global",
-    handler
-  ) {
+  init: function (data, container, color = "#ff4500", overview = "global", handler) {
     console.log("calendarHeatmap init enter");
 
     // Cache container reference
@@ -126,18 +120,13 @@ const calendarHeatmap = {
       const colIndex = Math.trunc(dayIndex / 7);
       const numWeeks = colIndex + 1;
 
-      calendarHeatmap.settings.width =
-        container.offsetWidth < 1000 ? 1000 : container.offsetWidth;
+      calendarHeatmap.settings.width = container.offsetWidth < 1000 ? 1000 : container.offsetWidth;
       calendarHeatmap.settings.item_size =
-        (calendarHeatmap.settings.width -
-          calendarHeatmap.settings.label_padding) /
-          numWeeks -
+        (calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) / numWeeks -
         calendarHeatmap.settings.gutter;
       calendarHeatmap.settings.height =
         calendarHeatmap.settings.label_padding +
-        7 *
-          (calendarHeatmap.settings.item_size +
-            calendarHeatmap.settings.gutter);
+        7 * (calendarHeatmap.settings.item_size + calendarHeatmap.settings.gutter);
       svg
         .attr("width", calendarHeatmap.settings.width)
         .attr("height", calendarHeatmap.settings.height);
@@ -201,8 +190,7 @@ const calendarHeatmap = {
     // console.log("drawChart");
     // Initialize selected date to today if it was not set
     if (!Object.keys(calendarHeatmap.selected).length) {
-      calendarHeatmap.selected =
-        calendarHeatmap.data[calendarHeatmap.data.length - 1];
+      calendarHeatmap.selected = calendarHeatmap.data[calendarHeatmap.data.length - 1];
     }
 
     if (calendarHeatmap.overview === "global") {
@@ -223,18 +211,13 @@ const calendarHeatmap = {
    */
   drawGlobalOverview: function () {
     // Add current overview to the history
-    if (
-      calendarHeatmap.history[calendarHeatmap.history.length - 1] !==
-      calendarHeatmap.overview
-    ) {
+    if (calendarHeatmap.history[calendarHeatmap.history.length - 1] !== calendarHeatmap.overview) {
       calendarHeatmap.history.push(calendarHeatmap.overview);
     }
 
     // Define start and end of the dataset
     const start = moment(calendarHeatmap.data[0].date).startOf("year");
-    const end = moment(
-      calendarHeatmap.data[calendarHeatmap.data.length - 1].date
-    ).endOf("year");
+    const end = moment(calendarHeatmap.data[calendarHeatmap.data.length - 1].date).endOf("year");
 
     // Define array of years and total values
     const year_data = d3.timeYears(start, end).map(function (d) {
@@ -304,17 +287,13 @@ const calendarHeatmap = {
       .attr("class", "item item-block-year")
       .attr("width", function () {
         return (
-          (calendarHeatmap.settings.width -
-            calendarHeatmap.settings.label_padding) /
+          (calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) /
             year_labels.length -
           calendarHeatmap.settings.gutter * 5
         );
       })
       .attr("height", function () {
-        return (
-          calendarHeatmap.settings.height -
-          calendarHeatmap.settings.label_padding
-        );
+        return calendarHeatmap.settings.height - calendarHeatmap.settings.label_padding;
       })
       .attr("transform", function (d) {
         return (
@@ -364,16 +343,12 @@ const calendarHeatmap = {
 
         // Construct tooltip
         let tooltip_html = "";
-        tooltip_html +=
-          "<div><span><strong>Total time tracked:</strong></span>";
+        tooltip_html += "<div><span><strong>Total time tracked:</strong></span>";
 
         const sec = parseInt(d.total, 10);
         const days = Math.floor(sec / 86400);
         if (days > 0) {
-          tooltip_html +=
-            "<span>" +
-            (days === 1 ? "1 day" : days + " days") +
-            "</span></div>";
+          tooltip_html += "<span>" + (days === 1 ? "1 day" : days + " days") + "</span></div>";
         }
         const hours = Math.floor((sec - days * 86400) / 3600);
         if (hours > 0) {
@@ -384,9 +359,7 @@ const calendarHeatmap = {
               "</span></div>";
           } else {
             tooltip_html +=
-              "<span>" +
-              (hours === 1 ? "1 hour" : hours + " hours") +
-              "</span></div>";
+              "<span>" + (hours === 1 ? "1 hour" : hours + " hours") + "</span></div>";
           }
         }
         const minutes = Math.floor((sec - days * 86400 - hours * 3600) / 60);
@@ -398,9 +371,7 @@ const calendarHeatmap = {
               "</span></div>";
           } else {
             tooltip_html +=
-              "<span>" +
-              (minutes === 1 ? "1 minute" : minutes + " minutes") +
-              "</span></div>";
+              "<span>" + (minutes === 1 ? "1 minute" : minutes + " minutes") + "</span></div>";
           }
         }
         tooltip_html += "<br />";
@@ -409,21 +380,15 @@ const calendarHeatmap = {
         if (Object.prototype.hasOwnProperty.call(d, "summary")) {
           if (d.summary.length <= 5) {
             for (let i = 0; i < d.summary.length; i++) {
+              tooltip_html += "<div><span><strong>" + d.summary[i].name + "</strong></span>";
               tooltip_html +=
-                "<div><span><strong>" + d.summary[i].name + "</strong></span>";
-              tooltip_html +=
-                "<span>" +
-                calendarHeatmap.formatTime(d.summary[i].value) +
-                "</span></div>";
+                "<span>" + calendarHeatmap.formatTime(d.summary[i].value) + "</span></div>";
             }
           } else {
             for (let i = 0; i < 5; i++) {
+              tooltip_html += "<div><span><strong>" + d.summary[i].name + "</strong></span>";
               tooltip_html +=
-                "<div><span><strong>" + d.summary[i].name + "</strong></span>";
-              tooltip_html +=
-                "<span>" +
-                calendarHeatmap.formatTime(d.summary[i].value) +
-                "</span></div>";
+                "<span>" + calendarHeatmap.formatTime(d.summary[i].value) + "</span></div>";
             }
 
             tooltip_html += "<br />";
@@ -437,9 +402,7 @@ const calendarHeatmap = {
 
             tooltip_html += "<div><span><strong>Other:</strong></span>";
             tooltip_html +=
-              "<span>" +
-              calendarHeatmap.formatTime(other_projects_sum) +
-              "</span></div>";
+              "<span>" + calendarHeatmap.formatTime(other_projects_sum) + "</span></div>";
           }
         }
 
@@ -521,9 +484,7 @@ const calendarHeatmap = {
           .duration(calendarHeatmap.settings.transition_duration)
           .ease(d3.easeLinear)
           .style("opacity", function (d) {
-            return moment(d.date).year() === moment(year_label).year()
-              ? 1
-              : 0.1;
+            return moment(d.date).year() === moment(year_label).year() ? 1 : 0.1;
           });
       })
       .on("mouseout", function () {
@@ -568,10 +529,7 @@ const calendarHeatmap = {
    */
   drawYearOverview: function () {
     // Add current overview to the history
-    if (
-      calendarHeatmap.history[calendarHeatmap.history.length - 1] !==
-      calendarHeatmap.overview
-    ) {
+    if (calendarHeatmap.history[calendarHeatmap.history.length - 1] !== calendarHeatmap.overview) {
       calendarHeatmap.history.push(calendarHeatmap.overview);
     }
 
@@ -596,14 +554,10 @@ const calendarHeatmap = {
 
     const calcItemX = function (d) {
       const date = moment(d.date);
-      const dayIndex = Math.round(
-        (date - moment(start_of_year).startOf("week")) / 86400000
-      );
+      const dayIndex = Math.round((date - moment(start_of_year).startOf("week")) / 86400000);
       const colIndex = Math.trunc(dayIndex / 7);
       return (
-        colIndex *
-          (calendarHeatmap.settings.item_size +
-            calendarHeatmap.settings.gutter) +
+        colIndex * (calendarHeatmap.settings.item_size + calendarHeatmap.settings.gutter) +
         calendarHeatmap.settings.label_padding
       );
     };
@@ -633,16 +587,10 @@ const calendarHeatmap = {
       .attr("class", "item item-circle")
       .style("opacity", 0)
       .attr("x", function (d) {
-        return (
-          calcItemX(d) +
-          (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2
-        );
+        return calcItemX(d) + (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2;
       })
       .attr("y", function (d) {
-        return (
-          calcItemY(d) +
-          (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2
-        );
+        return calcItemY(d) + (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2;
       })
       .attr("rx", function (d) {
         return calcItemSize(d);
@@ -704,17 +652,13 @@ const calendarHeatmap = {
             .attr("x", function (d) {
               return (
                 calcItemX(d) -
-                (calendarHeatmap.settings.item_size * 1.1 -
-                  calendarHeatmap.settings.item_size) /
-                  2
+                (calendarHeatmap.settings.item_size * 1.1 - calendarHeatmap.settings.item_size) / 2
               );
             })
             .attr("y", function (d) {
               return (
                 calcItemY(d) -
-                (calendarHeatmap.settings.item_size * 1.1 -
-                  calendarHeatmap.settings.item_size) /
-                  2
+                (calendarHeatmap.settings.item_size * 1.1 - calendarHeatmap.settings.item_size) / 2
               );
             })
             .attr("width", calendarHeatmap.settings.item_size * 1.1)
@@ -723,16 +667,10 @@ const calendarHeatmap = {
             .duration(calendarHeatmap.settings.transition_duration)
             .ease(d3.easeLinear)
             .attr("x", function (d) {
-              return (
-                calcItemX(d) +
-                (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2
-              );
+              return calcItemX(d) + (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2;
             })
             .attr("y", function (d) {
-              return (
-                calcItemY(d) +
-                (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2
-              );
+              return calcItemY(d) + (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2;
             })
             .attr("width", function (d) {
               return calcItemSize(d);
@@ -749,20 +687,14 @@ const calendarHeatmap = {
           '<div class="header"><strong>' +
           (d.total ? calendarHeatmap.formatTime(d.total) : "No time") +
           " tracked</strong></div>";
-        tooltip_html +=
-          "<div>on " +
-          moment(d.date).format("dddd, MMM Do YYYY") +
-          "</div><br>";
+        tooltip_html += "<div>on " + moment(d.date).format("dddd, MMM Do YYYY") + "</div><br>";
 
         // Add summary to the tooltip
         if (Object.prototype.hasOwnProperty.call(d, "summary")) {
           for (let i = 0; i < d.summary.length; i++) {
+            tooltip_html += "<div><span><strong>" + d.summary[i].name + "</strong></span>";
             tooltip_html +=
-              "<div><span><strong>" + d.summary[i].name + "</strong></span>";
-            tooltip_html +=
-              "<span>" +
-              calendarHeatmap.formatTime(d.summary[i].value) +
-              "</span></div>";
+              "<span>" + calendarHeatmap.formatTime(d.summary[i].value) + "</span></div>";
           }
         }
 
@@ -790,16 +722,10 @@ const calendarHeatmap = {
           .duration(calendarHeatmap.settings.transition_duration / 2)
           .ease(d3.easeLinear)
           .attr("x", function (d) {
-            return (
-              calcItemX(d) +
-              (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2
-            );
+            return calcItemX(d) + (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2;
           })
           .attr("y", function (d) {
-            return (
-              calcItemY(d) +
-              (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2
-            );
+            return calcItemY(d) + (calendarHeatmap.settings.item_size - calcItemSize(d)) / 2;
           })
           .attr("width", function (d) {
             return calcItemSize(d);
@@ -814,8 +740,7 @@ const calendarHeatmap = {
       .transition()
       .delay(function () {
         return (
-          (Math.cos(Math.PI * Math.random()) + 1) *
-          calendarHeatmap.settings.transition_duration
+          (Math.cos(Math.PI * Math.random()) + 1) * calendarHeatmap.settings.transition_duration
         );
       })
       .duration(function () {
@@ -929,16 +854,10 @@ const calendarHeatmap = {
       });
 
     // Add day labels
-    const day_labels = d3.timeDays(
-      moment().startOf("week"),
-      moment().endOf("week")
-    );
+    const day_labels = d3.timeDays(moment().startOf("week"), moment().endOf("week"));
     const dayScale = d3
       .scaleBand()
-      .rangeRound([
-        calendarHeatmap.settings.label_padding,
-        calendarHeatmap.settings.height
-      ])
+      .rangeRound([calendarHeatmap.settings.label_padding, calendarHeatmap.settings.height])
       .domain(
         day_labels.map(function (d) {
           return moment(d).weekday();
@@ -1000,17 +919,12 @@ const calendarHeatmap = {
    */
   drawMonthOverview: function () {
     // Add current overview to the history
-    if (
-      calendarHeatmap.history[calendarHeatmap.history.length - 1] !==
-      calendarHeatmap.overview
-    ) {
+    if (calendarHeatmap.history[calendarHeatmap.history.length - 1] !== calendarHeatmap.overview) {
       calendarHeatmap.history.push(calendarHeatmap.overview);
     }
 
     // Define beginning and end of the month
-    const start_of_month = moment(calendarHeatmap.selected.date).startOf(
-      "month"
-    );
+    const start_of_month = moment(calendarHeatmap.selected.date).startOf("month");
     const end_of_month = moment(calendarHeatmap.selected.date).endOf("month");
 
     // Filter data down to the selected month
@@ -1024,16 +938,10 @@ const calendarHeatmap = {
     });
 
     // Define day labels and axis
-    const day_labels = d3.timeDays(
-      moment().startOf("week"),
-      moment().endOf("week")
-    );
+    const day_labels = d3.timeDays(moment().startOf("week"), moment().endOf("week"));
     const dayScale = d3
       .scaleBand()
-      .rangeRound([
-        calendarHeatmap.settings.label_padding,
-        calendarHeatmap.settings.height
-      ])
+      .rangeRound([calendarHeatmap.settings.label_padding, calendarHeatmap.settings.height])
       .domain(
         day_labels.map(function (d) {
           return moment(d).weekday();
@@ -1047,10 +955,7 @@ const calendarHeatmap = {
     }
     const weekScale = d3
       .scaleBand()
-      .rangeRound([
-        calendarHeatmap.settings.label_padding,
-        calendarHeatmap.settings.width
-      ])
+      .rangeRound([calendarHeatmap.settings.label_padding, calendarHeatmap.settings.width])
       .padding([0.05])
       .domain(
         week_labels.map(function (weekday) {
@@ -1068,26 +973,20 @@ const calendarHeatmap = {
       .attr("class", "item item-block-month")
       .attr("width", function () {
         return (
-          (calendarHeatmap.settings.width -
-            calendarHeatmap.settings.label_padding) /
+          (calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) /
             week_labels.length -
           calendarHeatmap.settings.gutter * 5
         );
       })
       .attr("height", function () {
-        return Math.min(
-          dayScale.bandwidth(),
-          calendarHeatmap.settings.max_block_height
-        );
+        return Math.min(dayScale.bandwidth(), calendarHeatmap.settings.max_block_height);
       })
       .attr("transform", function (d) {
         return (
           "translate(" +
           weekScale(moment(d.date).week()) +
           "," +
-          (dayScale(moment(d.date).weekday()) +
-            dayScale.bandwidth() / 1.75 -
-            15) +
+          (dayScale(moment(d.date).weekday()) + dayScale.bandwidth() / 1.75 - 15) +
           ")"
         );
       })
@@ -1127,8 +1026,7 @@ const calendarHeatmap = {
       });
 
     const item_width =
-      (calendarHeatmap.settings.width -
-        calendarHeatmap.settings.label_padding) /
+      (calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) /
         week_labels.length -
       calendarHeatmap.settings.gutter * 5;
     const itemScale = d3.scaleLinear().rangeRound([0, item_width]);
@@ -1151,16 +1049,10 @@ const calendarHeatmap = {
       .attr("width", function (d) {
         const total = parseInt(d3.select(this.parentNode).attr("total"));
         itemScale.domain([0, total]);
-        return Math.max(
-          itemScale(d.value) - calendarHeatmap.settings.item_gutter,
-          1
-        );
+        return Math.max(itemScale(d.value) - calendarHeatmap.settings.item_gutter, 1);
       })
       .attr("height", function () {
-        return Math.min(
-          dayScale.bandwidth(),
-          calendarHeatmap.settings.max_block_height
-        );
+        return Math.min(dayScale.bandwidth(), calendarHeatmap.settings.max_block_height);
       })
       .attr("fill", function (d) {
         const color = d3
@@ -1181,14 +1073,12 @@ const calendarHeatmap = {
 
         // Construct tooltip
         let tooltip_html = "";
-        tooltip_html +=
-          '<div class="header"><strong>' + d.name + "</strong></div><br>";
+        tooltip_html += '<div class="header"><strong>' + d.name + "</strong></div><br>";
         tooltip_html +=
           "<div><strong>" +
           (d.value ? calendarHeatmap.formatTime(d.value) : "No time") +
           " tracked</strong></div>";
-        tooltip_html +=
-          "<div>on " + moment(date).format("dddd, MMM Do YYYY") + "</div>";
+        tooltip_html += "<div>on " + moment(date).format("dddd, MMM Do YYYY") + "</div>";
 
         // Calculate tooltip position
         const coordinates = calendarHeatmap.getMouseXY(event);
@@ -1212,8 +1102,7 @@ const calendarHeatmap = {
       .transition()
       .delay(function () {
         return (
-          (Math.cos(Math.PI * Math.random()) + 1) *
-          calendarHeatmap.settings.transition_duration
+          (Math.cos(Math.PI * Math.random()) + 1) * calendarHeatmap.settings.transition_duration
         );
       })
       .duration(function () {
@@ -1295,10 +1184,7 @@ const calendarHeatmap = {
 
         // Check week data
         const week_data = calendarHeatmap.data.filter(function (e) {
-          return (
-            d.startOf("week") <= moment(e.date) &&
-            moment(e.date) < d.endOf("week")
-          );
+          return d.startOf("week") <= moment(e.date) && moment(e.date) < d.endOf("week");
         });
 
         // Don't transition if there is no data to show
@@ -1379,10 +1265,7 @@ const calendarHeatmap = {
    */
   drawWeekOverview: function () {
     // Add current overview to the history
-    if (
-      calendarHeatmap.history[calendarHeatmap.history.length - 1] !==
-      calendarHeatmap.overview
-    ) {
+    if (calendarHeatmap.history[calendarHeatmap.history.length - 1] !== calendarHeatmap.overview) {
       calendarHeatmap.history.push(calendarHeatmap.overview);
     }
 
@@ -1401,16 +1284,10 @@ const calendarHeatmap = {
     });
 
     // Define day labels and axis
-    const day_labels = d3.timeDays(
-      moment().startOf("week"),
-      moment().endOf("week")
-    );
+    const day_labels = d3.timeDays(moment().startOf("week"), moment().endOf("week"));
     const dayScale = d3
       .scaleBand()
-      .rangeRound([
-        calendarHeatmap.settings.label_padding,
-        calendarHeatmap.settings.height
-      ])
+      .rangeRound([calendarHeatmap.settings.label_padding, calendarHeatmap.settings.height])
       .domain(
         day_labels.map(function (d) {
           return moment(d).weekday();
@@ -1421,10 +1298,7 @@ const calendarHeatmap = {
     const week_labels = [start_of_week];
     const weekScale = d3
       .scaleBand()
-      .rangeRound([
-        calendarHeatmap.settings.label_padding,
-        calendarHeatmap.settings.width
-      ])
+      .rangeRound([calendarHeatmap.settings.label_padding, calendarHeatmap.settings.width])
       .padding([0.01])
       .domain(
         week_labels.map(function (weekday) {
@@ -1442,26 +1316,20 @@ const calendarHeatmap = {
       .attr("class", "item item-block-week")
       .attr("width", function () {
         return (
-          (calendarHeatmap.settings.width -
-            calendarHeatmap.settings.label_padding) /
+          (calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) /
             week_labels.length -
           calendarHeatmap.settings.gutter * 5
         );
       })
       .attr("height", function () {
-        return Math.min(
-          dayScale.bandwidth(),
-          calendarHeatmap.settings.max_block_height
-        );
+        return Math.min(dayScale.bandwidth(), calendarHeatmap.settings.max_block_height);
       })
       .attr("transform", function (d) {
         return (
           "translate(" +
           weekScale(moment(d.date).week()) +
           "," +
-          (dayScale(moment(d.date).weekday()) +
-            dayScale.bandwidth() / 1.75 -
-            15) +
+          (dayScale(moment(d.date).weekday()) + dayScale.bandwidth() / 1.75 - 15) +
           ")"
         );
       })
@@ -1501,8 +1369,7 @@ const calendarHeatmap = {
       });
 
     const item_width =
-      (calendarHeatmap.settings.width -
-        calendarHeatmap.settings.label_padding) /
+      (calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) /
         week_labels.length -
       calendarHeatmap.settings.gutter * 5;
     const itemScale = d3.scaleLinear().rangeRound([0, item_width]);
@@ -1525,16 +1392,10 @@ const calendarHeatmap = {
       .attr("width", function (d) {
         const total = parseInt(d3.select(this.parentNode).attr("total"));
         itemScale.domain([0, total]);
-        return Math.max(
-          itemScale(d.value) - calendarHeatmap.settings.item_gutter,
-          1
-        );
+        return Math.max(itemScale(d.value) - calendarHeatmap.settings.item_gutter, 1);
       })
       .attr("height", function () {
-        return Math.min(
-          dayScale.bandwidth(),
-          calendarHeatmap.settings.max_block_height
-        );
+        return Math.min(dayScale.bandwidth(), calendarHeatmap.settings.max_block_height);
       })
       .attr("fill", function (d) {
         const color = d3
@@ -1555,14 +1416,12 @@ const calendarHeatmap = {
 
         // Construct tooltip
         let tooltip_html = "";
-        tooltip_html +=
-          '<div class="header"><strong>' + d.name + "</strong></div><br>";
+        tooltip_html += '<div class="header"><strong>' + d.name + "</strong></div><br>";
         tooltip_html +=
           "<div><strong>" +
           (d.value ? calendarHeatmap.formatTime(d.value) : "No time") +
           " tracked</strong></div>";
-        tooltip_html +=
-          "<div>on " + moment(date).format("dddd, MMM Do YYYY") + "</div>";
+        tooltip_html += "<div>on " + moment(date).format("dddd, MMM Do YYYY") + "</div>";
 
         // Calculate tooltip position
         const coordinates = calendarHeatmap.getMouseXY(event);
@@ -1586,8 +1445,7 @@ const calendarHeatmap = {
       .transition()
       .delay(function () {
         return (
-          (Math.cos(Math.PI * Math.random()) + 1) *
-          calendarHeatmap.settings.transition_duration
+          (Math.cos(Math.PI * Math.random()) + 1) * calendarHeatmap.settings.transition_duration
         );
       })
       .duration(function () {
@@ -1718,10 +1576,7 @@ const calendarHeatmap = {
    */
   drawDayOverview: function () {
     // Add current overview to the history
-    if (
-      calendarHeatmap.history[calendarHeatmap.history.length - 1] !==
-      calendarHeatmap.overview
-    ) {
+    if (calendarHeatmap.history[calendarHeatmap.history.length - 1] !== calendarHeatmap.overview) {
       calendarHeatmap.history.push(calendarHeatmap.overview);
     }
 
@@ -1730,25 +1585,17 @@ const calendarHeatmap = {
     //   calendarHeatmap.selected = calendarHeatmap.data[calendarHeatmap.data.length - 1];
     // }
 
-    const project_labels = calendarHeatmap.selected.summary.map(
-      function (project) {
-        return project.name;
-      }
-    );
+    const project_labels = calendarHeatmap.selected.summary.map(function (project) {
+      return project.name;
+    });
     const projectScale = d3
       .scaleBand()
-      .rangeRound([
-        calendarHeatmap.settings.label_padding,
-        calendarHeatmap.settings.height
-      ])
+      .rangeRound([calendarHeatmap.settings.label_padding, calendarHeatmap.settings.height])
       .domain(project_labels);
 
     const itemScale = d3
       .scaleTime()
-      .range([
-        calendarHeatmap.settings.label_padding * 2,
-        calendarHeatmap.settings.width
-      ])
+      .range([calendarHeatmap.settings.label_padding * 2, calendarHeatmap.settings.width])
       .domain([
         moment(calendarHeatmap.selected.date).startOf("day"),
         moment(calendarHeatmap.selected.date).endOf("day")
@@ -1771,10 +1618,7 @@ const calendarHeatmap = {
         return Math.max(end - itemScale(moment(d.date)), 1);
       })
       .attr("height", function () {
-        return Math.min(
-          projectScale.bandwidth(),
-          calendarHeatmap.settings.max_block_height
-        );
+        return Math.min(projectScale.bandwidth(), calendarHeatmap.settings.max_block_height);
       })
       .attr("fill", function (d) {
         return d.color || calendarHeatmap.color || "#ff4500";
@@ -1788,16 +1632,12 @@ const calendarHeatmap = {
 
         // Construct tooltip
         let tooltip_html = "";
-        tooltip_html +=
-          '<div class="header"><strong>' + d.name + "</strong><div><br>";
+        tooltip_html += '<div class="header"><strong>' + d.name + "</strong><div><br>";
         tooltip_html +=
           "<div><strong>" +
           (d.value ? calendarHeatmap.formatTime(d.value) : "No time") +
           " tracked</strong></div>";
-        tooltip_html +=
-          "<div>on " +
-          moment(d.date).format("dddd, MMM Do YYYY HH:mm") +
-          "</div>";
+        tooltip_html += "<div>on " + moment(d.date).format("dddd, MMM Do YYYY HH:mm") + "</div>";
 
         // Calculate tooltip position
         const coordinates = calendarHeatmap.getMouseXY(event);
@@ -1825,8 +1665,7 @@ const calendarHeatmap = {
       .transition()
       .delay(function () {
         return (
-          (Math.cos(Math.PI * Math.random()) + 1) *
-          calendarHeatmap.settings.transition_duration
+          (Math.cos(Math.PI * Math.random()) + 1) * calendarHeatmap.settings.transition_duration
         );
       })
       .duration(function () {
@@ -1862,10 +1701,7 @@ const calendarHeatmap = {
     );
     const timeScale = d3
       .scaleTime()
-      .range([
-        calendarHeatmap.settings.label_padding * 2,
-        calendarHeatmap.settings.width
-      ])
+      .range([calendarHeatmap.settings.label_padding * 2, calendarHeatmap.settings.width])
       .domain([0, timeLabels.length]);
     calendarHeatmap.labels.selectAll(".label-time").remove();
     calendarHeatmap.labels
@@ -1941,10 +1777,7 @@ const calendarHeatmap = {
         const obj = d3.select(this);
         let text_length = obj.node().getComputedTextLength(),
           text = obj.text();
-        while (
-          text_length > calendarHeatmap.settings.label_padding * 1.5 &&
-          text.length > 0
-        ) {
+        while (text_length > calendarHeatmap.settings.label_padding * 1.5 && text.length > 0) {
           text = text.slice(0, -1);
           obj.text(text + "...");
           text_length = obj.node().getComputedTextLength();
@@ -2192,10 +2025,7 @@ const calendarHeatmap = {
 };
 
 const onClickHandler = function (d) {
-  if (
-    !!calendarHeatmap.handler &&
-    typeof calendarHeatmap.handler == "function"
-  ) {
+  if (!!calendarHeatmap.handler && typeof calendarHeatmap.handler == "function") {
     calendarHeatmap.handler(d);
   }
 };

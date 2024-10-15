@@ -2,8 +2,8 @@ import { IDict, ITypeLife } from "../../types";
 import TypeLifeSelect from "./TypeLifeSelect.tsx";
 import SelectedChips from "./SelectedChips.tsx";
 import { Nullable } from "../../../../types";
-import React, { useState } from "react";
-import { Box, FormControlLabel } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, FormControlLabel, Button } from "@mui/material";
 import Switch from "@mui/material/Switch";
 
 export interface Filters {
@@ -12,6 +12,13 @@ export interface Filters {
   filterTask: Nullable<FilterBase>;
   mainEventsOnly: boolean;
 }
+
+export const filtersInitial: Filters = {
+  filterDates: null,
+  filterTypeLife: null,
+  filterTask: null,
+  mainEventsOnly: false
+};
 
 export interface FilterBase extends IDict {
   onDelete: () => void;
@@ -28,23 +35,30 @@ interface StepsFiltersProps {
   filters: Filters;
   onChangeTypeLifeSelect: (selectedItem: Nullable<ITypeLife>) => void;
   onChangeMainEventsOnly: (newValue: boolean) => void;
+  onResetFilters: () => void;
 }
 
 const StepsFilters = ({
   typeLife = [],
   filters,
   onChangeTypeLifeSelect,
-  onChangeMainEventsOnly
+  onChangeMainEventsOnly,
+  onResetFilters
 }: StepsFiltersProps) => {
   console.log("StepsFilters enter");
   console.log("StepsFilters filters=", filters);
 
-  const [mainEventsOnly, setMainEventsOnly] = useState(false);
+  const [mainEventsOnly, setMainEventsOnly] = useState(filters.mainEventsOnly);
+
+  // Synchronize local state with props
+  useEffect(() => {
+    setMainEventsOnly(filters.mainEventsOnly);
+  }, [filters.mainEventsOnly]);
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMainEventsOnly(event.target.checked);
-    onChangeMainEventsOnly(event.target.checked);
-    console.log("MainEvents only:", event.target.checked);
+    const newValue = event.target.checked;
+    setMainEventsOnly(newValue);
+    onChangeMainEventsOnly(newValue);
   };
 
   return (
@@ -64,6 +78,12 @@ const StepsFilters = ({
         />
       </div>
       <SelectedChips filters={filters} />
+      {/* Conditional rendering for the Reset button */}
+      {JSON.stringify(filters) !== JSON.stringify(filtersInitial) && (
+        <Button variant="outlined" onClick={onResetFilters} sx={{ ml: 2 }}>
+          Reset All Filters
+        </Button>
+      )}
     </Box>
   );
 };

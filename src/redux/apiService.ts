@@ -37,7 +37,20 @@ export const apiService = createApi({
     getCalendar: builder.query<ICalendarDate[], IUserYearClick>({
       query: (args) =>
         `/api/user/${args.userId}/calendar/${args.year}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
-      keepUnusedDataFor: 0 // disable cache
+      keepUnusedDataFor: 0, // disable cache
+      transformResponse: (response: ICalendarDate[]) => {
+        if (!Array.isArray(response)) {
+          return [];
+        }
+        return response.map((item) => ({
+          ...item,
+          total: item.total === null ? 1 : item.total,
+          details: item.details.map((detail) => ({
+            ...detail,
+            value: detail.value === null ? 1 : detail.value
+          }))
+        }));
+      }
       // query: ({ baseId, someFilterIds, sortBy, page }) => {
       // },
       // serializeQueryArgs: ({ endpointName }) => {
@@ -45,9 +58,6 @@ export const apiService = createApi({
       // },
       // merge: (currentCache, newItems) => {
       //   currentCache.items.push(...newItems.items);
-      // },
-      // transformResponse: (response) => {
-      //   return response || [];
       // },
       // forceRefetch({ currentArg, previousArg }) {
       //   return currentArg !== previousArg; // Force refetch if arguments differ
