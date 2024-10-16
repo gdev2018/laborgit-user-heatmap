@@ -4,24 +4,26 @@ import "./calendar-heatmap.css";
 import { ICalendarDate } from "../types";
 
 interface HeatmapProps {
-  data: ICalendarDate[];
+  data: ICalendarDate[] | undefined;
+  overview: "year" | "month" | "day";
   onClick?: (value: object) => void;
 }
 
-const Heatmap = React.memo(({ data, onClick }: HeatmapProps) => {
+const Heatmap = React.memo(({ data, overview, onClick }: HeatmapProps) => {
   console.log("Heatmap enter");
 
-  // Set the div target id
   const div_id = "calendar";
 
   // Set custom color for the calendar heatmap
   const color = "#044a8f";
 
   // Set overview types (choices are year, month and day)
-  const overview = "year";
+  // const overview = "year";
 
   useEffect(() => {
-    calendarHeatmap.init(data, div_id, color, overview, onClick);
+    if (data) {
+      calendarHeatmap.init(data, div_id, color, overview, onClick);
+    }
   }, [data, onClick]);
 
   return (
@@ -32,7 +34,7 @@ const Heatmap = React.memo(({ data, onClick }: HeatmapProps) => {
         boxSizing: "border-box"
       }}
     >
-      <div id="calendar" />
+      <div id={div_id} />
     </div>
   );
 });

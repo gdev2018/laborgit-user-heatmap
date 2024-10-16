@@ -36,7 +36,7 @@ const calendarHeatmap = {
   init: function (data, container, color = "#ff4500", overview = "global", handler) {
     console.log("calendarHeatmap init enter");
 
-    // Cache container reference
+    // Cache container reference. Don't remove it.
     const containerElement = (calendarHeatmap.container = container);
 
     // Assign data

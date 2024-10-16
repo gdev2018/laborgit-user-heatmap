@@ -1,32 +1,33 @@
 import React, { useCallback, useMemo } from "react";
-import UserActivityMemo from "./components/UserActivity";
 import "./reset.css";
+import UserActivity from "./components/UserActivity";
 // import "./normalize.css";
 // import "./App.css";
 
 const App: React.FC = () => {
   const url = window.location.pathname;
-  const userId = useMemo(() => {
+
+  const getUserIdFromUrl = (url: string): number | null => {
     const segments = url.split("/");
-    const userIndex = segments.findIndex((segment) => segment === "user");
-    if (userIndex !== -1 && userIndex + 1 < segments.length) {
-      return Number(segments[userIndex + 1]);
-    }
-    return null;
-  }, [url]);
+    const userIndex = segments.indexOf("user");
+    return userIndex !== -1 && userIndex + 1 < segments.length
+      ? Number(segments[userIndex + 1]) || null
+      : null;
+  };
+
+  const userId = useMemo(() => getUserIdFromUrl(url), [url]);
 
   const renderError = useCallback(() => {
     if (userId === null && process.env.NODE_ENV !== "development") {
-      return <div>Error: Invalid UserID</div>;
+      return <div>Error: Invalid UserID. Please check the URL.</div>;
     }
     return null;
   }, [userId]);
 
   return (
-    // <div style={{ minHeight: "300px", overflowY: "auto" }}>
     <>
       {renderError()}
-      <UserActivityMemo userId={userId === null ? 1 : userId} />
+      <UserActivity userId={userId ?? 1} />
     </>
   );
 };

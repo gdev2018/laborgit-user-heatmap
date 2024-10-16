@@ -78,7 +78,6 @@ const StepsFilters = ({
         />
       </div>
       <SelectedChips filters={filters} />
-      {/* Conditional rendering for the Reset button */}
       {JSON.stringify(filters) !== JSON.stringify(filtersInitial) && (
         <Button variant="outlined" onClick={onResetFilters} sx={{ ml: 2 }}>
           Reset All Filters

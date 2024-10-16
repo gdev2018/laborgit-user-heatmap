@@ -59,7 +59,8 @@ const UserSteps = ({
   }
 
   if (!data?.content) {
-    return <div>no data</div>;
+    return;
+    // return <div>No user steps</div>;
   }
   const groupedTasks = groupAndSortTasksByDate(data.content);
   const typeLifeItems = getTypeLifeItems(typeLife);
