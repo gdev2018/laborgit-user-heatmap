@@ -1846,6 +1846,8 @@ const calendarHeatmap = {
         calendarHeatmap.history.pop();
         calendarHeatmap.overview = calendarHeatmap.history.pop();
         calendarHeatmap.drawChart();
+
+        onClickHandler({ in_transition: true, overview: calendarHeatmap.overview });
       });
     button
       .append("circle")
@@ -2025,6 +2027,7 @@ const calendarHeatmap = {
 };
 
 const onClickHandler = function (d) {
+  console.log("onClickHandler d=" + JSON.stringify(d));
   if (!!calendarHeatmap.handler && typeof calendarHeatmap.handler == "function") {
     calendarHeatmap.handler(d);
   }

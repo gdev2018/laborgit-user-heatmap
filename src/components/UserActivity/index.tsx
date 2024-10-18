@@ -14,10 +14,23 @@ import { Box, Skeleton } from "@mui/material";
 import StepsFilters, { Filters, filtersInitial } from "./UserSteps/StepsFilters";
 import { Nullable } from "../../types";
 
-interface HeatmapValue {
-  date?: string;
-  [key: string]: any; // For other properties
-}
+type HeatmapDate = {
+  date: string;
+  total: number;
+  summary: HeatmapDateSummary[];
+};
+
+type HeatmapDateSummary = {
+  name: string;
+  value: number;
+};
+
+type HeatmapTransition = {
+  in_transition: boolean;
+  overview: string;
+};
+
+type HeatmapValue = Date | HeatmapDate | HeatmapTransition;
 
 const UserActivity = ({ userId }: IUserYearClick) => {
   console.log("UserActivity enter");
@@ -91,10 +104,48 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     handleYearSelect(currentYear);
   }, [currentYear, handleYearSelect]);
 
+  const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) => {
+    console.log("typeLife=", typeLife);
+    setFilters((prevState) => ({
+      ...prevState,
+      filterTypeLife: typeLife
+    }));
+  };
+
+  const handleOnChangeMainEventsOnly = (value: boolean) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      mainEventsOnly: value
+    }));
+  };
+
+  const handleOnClickTask = (task: IDict) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      filterTask: {
+        id: task.id,
+        name: task.name,
+        onDelete: handleOnDeleteTask
+      }
+    }));
+  };
+
+  const handleOnDeleteTask = function () {
+    setFilters((prevState) => ({
+      ...prevState,
+      filterTask: null
+    }));
+  };
+
   // todo set types vor value
   const handleOnClickHeatmap = useCallback(
     (value: HeatmapValue) => {
-      console.log("value=", value);
+      console.log("handleOnClickHeatmap value=", value);
+      if (typeof value === HeatmapTransition) {
+        console.error("Нужно сбросить фильтр дат");
+        return; // Exit early if value is a Date
+      }
+
       if (typeof value.date === "string") {
         const startDate = new Date(value.date);
         const endDate = new Date(startDate);
@@ -130,39 +181,6 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     },
     [handleOnDeleteDates]
   );
-
-  const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) => {
-    console.log("typeLife=", typeLife);
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTypeLife: typeLife
-    }));
-  };
-
-  const handleOnChangeMainEventsOnly = (value: boolean) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      mainEventsOnly: value
-    }));
-  };
-
-  const handleOnClickTask = (task: IDict) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTask: {
-        id: task.id,
-        name: task.name,
-        onDelete: handleOnDeleteTask
-      }
-    }));
-  };
-
-  const handleOnDeleteTask = function () {
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTask: null
-    }));
-  };
 
   if (calendarIsLoading) {
     return <>Loading user data...</>;
