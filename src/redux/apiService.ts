@@ -34,10 +34,18 @@ export const apiService = createApi({
     // baseUrl: BASE_URL
   }),
   endpoints: (builder) => ({
-    getCalendar: builder.query<ICalendarDate[], IUserYearClick>({
-      query: (args) =>
-        `/api/user/${args.userId}/calendar/${args.year}/${args.typeLife}/${args.taskId}/${args.mainEventsOnly ? 1 : 0}/`,
-      keepUnusedDataFor: 0, // disable cache
+    getCalendar: builder.mutation<ICalendarDate[], IUserYearClick>({
+      query: (args) => ({
+        url: `/api/user/${args.userId}/calendar/`,
+        method: "POST",
+        body: {
+          userId: args.userId,
+          year: args.year,
+          typeLife: args.typeLife,
+          taskId: args.taskId,
+          mainEventsOnly: args.mainEventsOnly ? 1 : 0
+        }
+      }),
       transformResponse: (response: ICalendarDate[]) => {
         if (!Array.isArray(response)) {
           return [];
@@ -51,17 +59,6 @@ export const apiService = createApi({
           }))
         }));
       }
-      // query: ({ baseId, someFilterIds, sortBy, page }) => {
-      // },
-      // serializeQueryArgs: ({ endpointName }) => {
-      //   return endpointName;
-      // },
-      // merge: (currentCache, newItems) => {
-      //   currentCache.items.push(...newItems.items);
-      // },
-      // forceRefetch({ currentArg, previousArg }) {
-      //   return currentArg !== previousArg; // Force refetch if arguments differ
-      // },
     }),
     getUserSteps: builder.mutation<IServerResponse<IUserStep, ITotalResultsSteps>, IUserYearClick>({
       query: (args) => ({
@@ -91,6 +88,16 @@ export const apiService = createApi({
           colorbackground_hex: powerBuilderColorToHex(item.colorbackground)
         }));
       }
+      // keepUnusedDataFor: 0, // disable cache
+      // serializeQueryArgs: ({ endpointName }) => {
+      //   return endpointName;
+      // },
+      // merge: (currentCache, newItems) => {
+      //   currentCache.items.push(...newItems.items);
+      // },
+      // forceRefetch({ currentArg, previousArg }) {
+      //   return currentArg !== previousArg; // Force refetch if arguments differ
+      // },
     }),
     getUserYears: builder.query<number[], IUserYearClick>({
       query: (args) => `/api/user/${args.userId}/years/`,
@@ -105,7 +112,7 @@ export const apiService = createApi({
 });
 
 export const {
-  useGetCalendarQuery,
+  useGetCalendarMutation,
   useGetUserStepsMutation,
   useGetUserTypeLifeQuery,
   useGetUserYearsQuery

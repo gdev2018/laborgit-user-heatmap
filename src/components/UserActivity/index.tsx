@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  useGetCalendarQuery,
+  useGetCalendarMutation,
   useGetUserStepsMutation,
   useGetUserTypeLifeQuery,
   useGetUserYearsQuery
@@ -38,24 +38,32 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     userId
   });
 
-  // todo set skeleton if isLoading
-  const {
-    data: calendarData,
-    error: calendarError,
-    isLoading: calendarIsLoading
-  } = useGetCalendarQuery({
-    userId,
-    year: selectedYear,
-    typeLife: filters.filterTypeLife?.id || 0,
-    taskId: filters.filterTask?.id || 0,
-    mainEventsOnly: filters.mainEventsOnly
-  });
+  const [getCalendar, { data: calendarData, error: calendarError, isLoading: calendarIsLoading }] =
+    useGetCalendarMutation();
 
   const [getUserSteps, { data: stepsData, error: stepsError, isLoading: stepsIsLoading }] =
     useGetUserStepsMutation();
 
   useEffect(() => {
-    const fetchUserSteps = async () => {
+    const fetchCalendarData = async () => {
+      try {
+        await getCalendar({
+          userId,
+          year: selectedYear,
+          typeLife: filters.filterTypeLife?.id || 0,
+          taskId: filters.filterTask?.id || 0,
+          mainEventsOnly: filters.mainEventsOnly
+        }).unwrap();
+      } catch (error) {
+        console.error("Failed to fetch user calendar:", error);
+      }
+    };
+
+    fetchCalendarData();
+  }, [userId, getCalendar, selectedYear, filters]);
+
+  useEffect(() => {
+    const fetchUserStepsData = async () => {
       try {
         await getUserSteps({
           userId,
@@ -72,7 +80,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
       }
     };
 
-    fetchUserSteps();
+    fetchUserStepsData();
   }, [userId, getUserSteps, selectedDateStart, selectedDateEnd, filters]);
 
   const handleResetFilters = () => {
