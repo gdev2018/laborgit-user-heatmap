@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import calendarHeatmap from "./calendar-heatmap";
 import "./calendar-heatmap.css";
-import { ICalendarDate } from "../types";
+import { HeatmapValue, ICalendarDate } from "../types";
 
 interface HeatmapProps {
   data: ICalendarDate[] | undefined;
   overview: "year" | "month" | "day";
-  onClick?: (value: object) => void;
+  onClick?: (value: HeatmapValue) => void;
 }
 
 const Heatmap = React.memo(({ data, overview, onClick }: HeatmapProps) => {

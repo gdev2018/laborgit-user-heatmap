@@ -1,4 +1,6 @@
 // todo rename into RequestFilters or RequestBody
+import { hasProperty } from "../../../types";
+
 export interface IUserYearClick {
   userId: number;
   year?: number;
@@ -62,4 +64,30 @@ export type ICalendar = ICalendarDate[];
 export interface IDict {
   id: number;
   name: string;
+}
+
+type HeatmapDate = {
+  date: string;
+  total: number;
+  summary: HeatmapDateSummary[];
+};
+
+type HeatmapDateSummary = {
+  name: string;
+  value: number;
+};
+
+type HeatmapTransition = {
+  in_transition: boolean;
+  overview: string;
+};
+
+export type HeatmapValue = Date | HeatmapDate | HeatmapTransition;
+
+export function isHeatmapDate(obj: any): obj is HeatmapDate {
+  return hasProperty(obj, "date");
+}
+
+export function isHeatmapTransition(obj: any): obj is HeatmapTransition {
+  return hasProperty(obj, "in_transition");
 }

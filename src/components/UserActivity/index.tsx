@@ -9,28 +9,17 @@ import UserSteps from "./UserSteps";
 import YearsFilter from "./YearsFilter";
 import TotalHeader from "./TotalHeader";
 import Heatmap from "./Heatmap";
-import { IDict, ITypeLife, IUserYearClick } from "./types";
+import {
+  HeatmapValue,
+  IDict,
+  isHeatmapDate,
+  isHeatmapTransition,
+  ITypeLife,
+  IUserYearClick
+} from "./types";
 import { Box, Skeleton } from "@mui/material";
 import StepsFilters, { Filters, filtersInitial } from "./UserSteps/StepsFilters";
 import { Nullable } from "../../types";
-
-type HeatmapDate = {
-  date: string;
-  total: number;
-  summary: HeatmapDateSummary[];
-};
-
-type HeatmapDateSummary = {
-  name: string;
-  value: number;
-};
-
-type HeatmapTransition = {
-  in_transition: boolean;
-  overview: string;
-};
-
-type HeatmapValue = Date | HeatmapDate | HeatmapTransition;
 
 const UserActivity = ({ userId }: IUserYearClick) => {
   console.log("UserActivity enter");
@@ -84,7 +73,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     };
 
     fetchUserSteps();
-  }, [userId, selectedDateStart, selectedDateEnd, filters]);
+  }, [userId, getUserSteps, selectedDateStart, selectedDateEnd, filters]);
 
   const handleResetFilters = () => {
     setSelectedYear(currentYear);
@@ -141,12 +130,9 @@ const UserActivity = ({ userId }: IUserYearClick) => {
   const handleOnClickHeatmap = useCallback(
     (value: HeatmapValue) => {
       console.log("handleOnClickHeatmap value=", value);
-      if (typeof value === HeatmapTransition) {
-        console.error("Нужно сбросить фильтр дат");
-        return; // Exit early if value is a Date
-      }
-
-      if (typeof value.date === "string") {
+      if (isHeatmapTransition(value)) {
+        setFilters((prev) => ({ ...prev, filterDates: null }));
+      } else if (isHeatmapDate(value)) {
         const startDate = new Date(value.date);
         const endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 1);

@@ -21,4 +21,10 @@ export interface IServerResponse<T, TC> {
   content: T[];
 }
 
+type AnyType = Record<string, unknown>;
+
+export function hasProperty<T extends AnyType>(obj: any, propertyName: keyof T): obj is T {
+  return obj && typeof obj === "object" && propertyName in obj;
+}
+
 export type Nullable<T> = T | null;
