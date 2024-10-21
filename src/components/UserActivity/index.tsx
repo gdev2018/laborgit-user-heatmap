@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useGetCalendarMutation,
   useGetUserStepsMutation,
@@ -45,44 +45,46 @@ const UserActivity = ({ userId }: IUserYearClick) => {
   const [getUserSteps, { data: stepsData, error: stepsError, isLoading: stepsIsLoading }] =
     useGetUserStepsMutation();
 
-  useEffect(() => {
-    const fetchCalendarData = async () => {
-      try {
-        await getCalendar({
-          userId,
-          year: selectedYear,
-          typeLife: filters.filterTypeLife?.id || 0,
-          taskId: filters.filterTask?.id || 0,
-          mainEventsOnly: filters.mainEventsOnly
-        }).unwrap();
-      } catch (error) {
-        console.error("Failed to fetch user calendar:", error);
-      }
-    };
+  const memoizedFilters = useMemo(
+    () => ({
+      typeLife: filters.filterTypeLife?.id || 0,
+      taskId: filters.filterTask?.id || 0,
+      mainEventsOnly: filters.mainEventsOnly
+    }),
+    [filters]
+  );
 
+  const fetchCalendarData = useCallback(async () => {
+    try {
+      await getCalendar({
+        userId,
+        year: selectedYear,
+        ...memoizedFilters
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to fetch user calendar:", error);
+    }
+  }, [userId, selectedYear, getCalendar, memoizedFilters]);
+
+  const fetchUserStepsData = useCallback(async () => {
+    try {
+      await getUserSteps({
+        userId,
+        dateStart: selectedDateStart,
+        dateEnd: selectedDateEnd,
+        ...memoizedFilters,
+        page: 1,
+        itemsPerPage: 10
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to fetch user steps:", error);
+    }
+  }, [userId, selectedDateStart, selectedDateEnd, getUserSteps, memoizedFilters]);
+
+  useEffect(() => {
     fetchCalendarData();
-  }, [userId, getCalendar, selectedYear, filters]);
-
-  useEffect(() => {
-    const fetchUserStepsData = async () => {
-      try {
-        await getUserSteps({
-          userId,
-          dateStart: selectedDateStart,
-          dateEnd: selectedDateEnd,
-          typeLife: filters.filterTypeLife?.id || 0,
-          taskId: filters.filterTask?.id || 0,
-          mainEventsOnly: filters.mainEventsOnly,
-          page: 1,
-          itemsPerPage: 10
-        }).unwrap();
-      } catch (error) {
-        console.error("Failed to fetch user steps:", error);
-      }
-    };
-
     fetchUserStepsData();
-  }, [userId, getUserSteps, selectedDateStart, selectedDateEnd, filters]);
+  }, [fetchCalendarData, fetchUserStepsData]);
 
   const handleResetFilters = () => {
     setSelectedYear(currentYear);

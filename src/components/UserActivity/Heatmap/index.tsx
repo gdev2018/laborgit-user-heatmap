@@ -24,7 +24,7 @@ const Heatmap = React.memo(({ data, overview, onClick }: HeatmapProps) => {
     if (data) {
       calendarHeatmap.init(data, div_id, color, overview, onClick);
     }
-  }, [data, onClick]);
+  }, [data, overview, onClick]);
 
   return (
     <div
