@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import {
   useGetCalendarMutation,
   useGetUserStepsMutation,
@@ -38,6 +38,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     userId
   });
 
+  // todo после добавления этого, стало ререндериться вся страница при изменении любых фильтров
   const [getCalendar, { data: calendarData, error: calendarError, isLoading: calendarIsLoading }] =
     useGetCalendarMutation();
 
@@ -102,7 +103,6 @@ const UserActivity = ({ userId }: IUserYearClick) => {
   }, [currentYear, handleYearSelect]);
 
   const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) => {
-    console.log("typeLife=", typeLife);
     setFilters((prevState) => ({
       ...prevState,
       filterTypeLife: typeLife
