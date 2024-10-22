@@ -21,13 +21,12 @@ import { Box } from "@mui/material";
 import StepsFilters, { Filters, filtersInitial } from "./UserSteps/StepsFilters";
 import { Nullable } from "../../types";
 
+const currentYear = new Date().getFullYear();
+
 const UserActivity = ({ userId }: IUserYearClick) => {
   console.log("UserActivity enter");
-  const currentYear = new Date().getFullYear();
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [selectedDateStart, setSelectedDateStart] = useState<string>(`${currentYear}-01-01`);
-  const [selectedDateEnd, setSelectedDateEnd] = useState<string>(`${currentYear + 1}-01-01`);
 
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
   const [filters, setFilters] = useState<Filters>(filtersInitial);
 
   const { data: typeLifeData } = useGetUserTypeLifeQuery({
@@ -38,7 +37,6 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     userId
   });
 
-  // todo после добавления этого, стало ререндериться вся страница при изменении любых фильтров
   const [getCalendar, { data: calendarData, error: calendarError, isLoading: calendarIsLoading }] =
     useGetCalendarMutation();
 
@@ -70,8 +68,8 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     try {
       await getUserSteps({
         userId,
-        dateStart: selectedDateStart,
-        dateEnd: selectedDateEnd,
+        dateStart: filters.filterDates?.start || `${selectedYear}-01-01`,
+        dateEnd: filters.filterDates?.end || `${Number(selectedYear) + 1}-01-01`,
         ...memoizedFilters,
         page: 1,
         itemsPerPage: 10
@@ -79,30 +77,29 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     } catch (error) {
       console.error("Failed to fetch user steps:", error);
     }
-  }, [userId, selectedDateStart, selectedDateEnd, getUserSteps, memoizedFilters]);
+  }, [userId, selectedYear, filters.filterDates, getUserSteps, memoizedFilters]);
 
   useEffect(() => {
     fetchCalendarData();
+  }, [fetchCalendarData]);
+
+  useEffect(() => {
     fetchUserStepsData();
-  }, [fetchCalendarData, fetchUserStepsData]);
+  }, [fetchUserStepsData]);
 
   const handleResetFilters = () => {
     setSelectedYear(currentYear);
-    setSelectedDateStart(`${currentYear}-01-01`);
-    setSelectedDateEnd(`${currentYear + 1}-01-01`);
     setFilters(filtersInitial);
   };
 
   const handleYearSelect = useCallback((year: number) => {
     setSelectedYear(year);
-    setSelectedDateStart(`${year}-01-01`);
-    setSelectedDateEnd(`${Number(year) + 1}-01-01`);
     setFilters((prev) => ({ ...prev, filterDates: null }));
   }, []);
 
   const handleOnDeleteDates = useCallback(() => {
     handleYearSelect(currentYear);
-  }, [currentYear, handleYearSelect]);
+  }, [handleYearSelect]);
 
   const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) => {
     setFilters((prevState) => ({
@@ -148,19 +145,6 @@ const UserActivity = ({ userId }: IUserYearClick) => {
 
         const startDateString = startDate.toISOString().split("T")[0]; // Set the start date in YYYY-MM-DD format
         const endDateString = endDate.toISOString().split("T")[0]; // Set the end date in YYYY-MM-DD format
-        setSelectedDateStart(startDateString); // todo next - why this row fires calendarHeatmap.init twice?
-        // т.к. меняется state компонента, то он перерисовывается и все его дочерние
-        // чтоб дочерние не менялись, если не менялись его props надо React.memo()
-        // но, видимо, не может правильно сравнить calendarData из-за неглубокого сравнения (shallow compare)
-        // надо вторым параметром задать кастомное сравнение в React.memo(Component, ... )
-        // и обязательно определить конкретный тип для возвращаемого значения calendarData
-        // const MyComponent = React.memo((props) => {
-        //   /* render using props */
-        // }, (prevProps, nextProps) => {
-        //   // Ваше собственное сравнение
-        //   return prevProps.user.name === nextProps.user.name; // Пример глубокого сравнения
-        // });
-        setSelectedDateEnd(endDateString);
 
         setFilters((prevState) => ({
           ...prevState,

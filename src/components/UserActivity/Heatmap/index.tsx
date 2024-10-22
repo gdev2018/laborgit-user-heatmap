@@ -11,6 +11,7 @@ interface HeatmapProps {
 
 const Heatmap = ({ data, overview, onClick }: HeatmapProps) => {
   console.log("Heatmap enter");
+  console.log("Heatmap data= ", data);
 
   const div_id = "calendar";
 
