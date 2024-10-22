@@ -99,7 +99,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
 
   const handleOnDeleteDates = useCallback(() => handleYearSelect(currentYear), [handleYearSelect]);
 
-  const updateFilterState = (newFilterState: any) => {
+  const updateFilterState = (newFilterState: Partial<Filters>) => {
     setFilters((prevState) => ({ ...prevState, ...newFilterState }));
   };
 
