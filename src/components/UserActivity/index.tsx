@@ -97,41 +97,42 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     setFilters((prev) => ({ ...prev, filterDates: null }));
   }, []);
 
-  const handleOnDeleteDates = useCallback(() => {
-    handleYearSelect(currentYear);
-  }, [handleYearSelect]);
+  const handleOnDeleteDates = useCallback(() => handleYearSelect(currentYear), [handleYearSelect]);
 
-  const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) => {
+  const handleOnClickTypeLife = useCallback((typeLife: Nullable<ITypeLife>) => {
     setFilters((prevState) => ({
       ...prevState,
       filterTypeLife: typeLife
     }));
-  };
+  }, []);
 
-  const handleOnChangeMainEventsOnly = (value: boolean) => {
+  const handleOnChangeMainEventsOnly = useCallback((value: boolean) => {
     setFilters((prevState) => ({
       ...prevState,
       mainEventsOnly: value
     }));
-  };
+  }, []);
 
-  const handleOnClickTask = (task: IDict) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTask: {
-        id: task.id,
-        name: task.name,
-        onDelete: handleOnDeleteTask
-      }
-    }));
-  };
-
-  const handleOnDeleteTask = function () {
+  const handleOnDeleteTask = useCallback(() => {
     setFilters((prevState) => ({
       ...prevState,
       filterTask: null
     }));
-  };
+  }, []);
+
+  const handleOnClickTask = useCallback(
+    (task: IDict) => {
+      setFilters((prevState) => ({
+        ...prevState,
+        filterTask: {
+          id: task.id,
+          name: task.name,
+          onDelete: handleOnDeleteTask
+        }
+      }));
+    },
+    [handleOnDeleteTask]
+  );
 
   const handleOnClickHeatmap = useCallback(
     (value: HeatmapValue) => {
@@ -142,15 +143,11 @@ const UserActivity = ({ userId }: IUserYearClick) => {
         const startDate = new Date(value.date);
         const endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 1);
-
-        const startDateString = startDate.toISOString().split("T")[0]; // Set the start date in YYYY-MM-DD format
-        const endDateString = endDate.toISOString().split("T")[0]; // Set the end date in YYYY-MM-DD format
-
         setFilters((prevState) => ({
           ...prevState,
           filterDates: {
-            start: startDateString,
-            end: endDateString,
+            start: startDate.toISOString().split("T")[0], // Set the start date in YYYY-MM-DD format
+            end: endDate.toISOString().split("T")[0], // Set the end date in YYYY-MM-DD format
             onDelete: handleOnDeleteDates
           }
         }));
@@ -183,14 +180,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
         {calendarIsLoading || stepsIsLoading ? (
           <Box height={39}>Loading user data...</Box>
         ) : (
-          <TotalHeader
-            totalResults={
-              // TODO totalResults not cleared on year change
-              // stepsIsLoading ? null : stepsData?.totalResults ?? null
-              stepsData?.totalResults ?? null
-            }
-            year={selectedYear}
-          />
+          <TotalHeader totalResults={stepsData?.totalResults ?? null} year={selectedYear} />
         )}
 
         <Heatmap data={calendarData} overview={"year"} onClick={handleOnClickHeatmap} />
