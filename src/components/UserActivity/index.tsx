@@ -17,7 +17,7 @@ import {
   ITypeLife,
   IUserYearClick
 } from "./types";
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 import StepsFilters, { Filters, filtersInitial } from "./UserSteps/StepsFilters";
 import { Nullable } from "../../types";
 
@@ -51,7 +51,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
       taskId: filters.filterTask?.id || 0,
       mainEventsOnly: filters.mainEventsOnly
     }),
-    [filters]
+    [filters.filterTypeLife, filters.filterTask, filters.mainEventsOnly]
   );
 
   const fetchCalendarData = useCallback(async () => {
@@ -136,7 +136,6 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     }));
   };
 
-  // todo set types vor value
   const handleOnClickHeatmap = useCallback(
     (value: HeatmapValue) => {
       console.log("handleOnClickHeatmap value=", value);
@@ -178,12 +177,12 @@ const UserActivity = ({ userId }: IUserYearClick) => {
     [handleOnDeleteDates]
   );
 
-  if (calendarIsLoading) {
-    return <>Loading user data...</>;
+  if (calendarError) {
+    return <>Error loading user calendar data: {calendarError}</>;
   }
 
-  if (calendarError) {
-    return <>Error loading user data: {calendarError}</>;
+  if (stepsError) {
+    return <>Error loading user steps data: {stepsError}</>;
   }
 
   // if (!calendarData || calendarData.length === 0) return <>No user data</>;
@@ -197,8 +196,8 @@ const UserActivity = ({ userId }: IUserYearClick) => {
           overflow: "auto"
         }}
       >
-        {stepsIsLoading || stepsError ? (
-          <Skeleton width={0} height={39} />
+        {calendarIsLoading || stepsIsLoading ? (
+          <Box height={39}>Loading user data...</Box>
         ) : (
           <TotalHeader
             totalResults={
@@ -210,11 +209,7 @@ const UserActivity = ({ userId }: IUserYearClick) => {
           />
         )}
 
-        {calendarIsLoading || calendarError ? (
-          <Skeleton width={1000} height={200} />
-        ) : (
-          <Heatmap data={calendarData} overview={"year"} onClick={handleOnClickHeatmap} />
-        )}
+        <Heatmap data={calendarData} overview={"year"} onClick={handleOnClickHeatmap} />
 
         <Box ml={4}>
           <StepsFilters

@@ -9,7 +9,7 @@ interface HeatmapProps {
   onClick?: (value: HeatmapValue) => void;
 }
 
-const Heatmap = React.memo(({ data, overview, onClick }: HeatmapProps) => {
+const Heatmap = ({ data, overview, onClick }: HeatmapProps) => {
   console.log("Heatmap enter");
 
   const div_id = "calendar";
@@ -37,7 +37,7 @@ const Heatmap = React.memo(({ data, overview, onClick }: HeatmapProps) => {
       <div id={div_id} />
     </div>
   );
-});
+};
 
 const HeatmapMemo = React.memo(Heatmap, (prevProps, nextProps) => {
   return JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data);
