@@ -99,64 +99,42 @@ const UserActivity = ({ userId }: IUserYearClick) => {
 
   const handleOnDeleteDates = useCallback(() => handleYearSelect(currentYear), [handleYearSelect]);
 
-  const handleOnClickTypeLife = useCallback((typeLife: Nullable<ITypeLife>) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTypeLife: typeLife
-    }));
-  }, []);
+  const updateFilterState = (newFilterState: any) => {
+    setFilters((prevState) => ({ ...prevState, ...newFilterState }));
+  };
 
-  const handleOnChangeMainEventsOnly = useCallback((value: boolean) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      mainEventsOnly: value
-    }));
-  }, []);
+  const handleOnClickTypeLife = (typeLife: Nullable<ITypeLife>) =>
+    updateFilterState({ filterTypeLife: typeLife });
 
-  const handleOnDeleteTask = useCallback(() => {
-    setFilters((prevState) => ({
-      ...prevState,
-      filterTask: null
-    }));
-  }, []);
+  const handleOnChangeMainEventsOnly = (value: boolean) =>
+    updateFilterState({ mainEventsOnly: value });
 
-  const handleOnClickTask = useCallback(
-    (task: IDict) => {
-      setFilters((prevState) => ({
-        ...prevState,
-        filterTask: {
-          id: task.id,
-          name: task.name,
-          onDelete: handleOnDeleteTask
+  const handleOnDeleteTask = () => updateFilterState({ filterTask: null });
+
+  const handleOnClickTask = (task: IDict) => {
+    updateFilterState({
+      filterTask: { id: task.id, name: task.name, onDelete: handleOnDeleteTask }
+    });
+  };
+
+  const handleOnClickHeatmap = (value: HeatmapValue) => {
+    if (isHeatmapTransition(value)) {
+      updateFilterState({ filterDates: null });
+    } else if (isHeatmapDate(value)) {
+      const startDate = new Date(value.date);
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 1);
+      updateFilterState({
+        filterDates: {
+          start: startDate.toISOString().split("T")[0],
+          end: endDate.toISOString().split("T")[0],
+          onDelete: handleOnDeleteDates
         }
-      }));
-    },
-    [handleOnDeleteTask]
-  );
-
-  const handleOnClickHeatmap = useCallback(
-    (value: HeatmapValue) => {
-      console.log("handleOnClickHeatmap value=", value);
-      if (isHeatmapTransition(value)) {
-        setFilters((prev) => ({ ...prev, filterDates: null }));
-      } else if (isHeatmapDate(value)) {
-        const startDate = new Date(value.date);
-        const endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 1);
-        setFilters((prevState) => ({
-          ...prevState,
-          filterDates: {
-            start: startDate.toISOString().split("T")[0], // Set the start date in YYYY-MM-DD format
-            end: endDate.toISOString().split("T")[0], // Set the end date in YYYY-MM-DD format
-            onDelete: handleOnDeleteDates
-          }
-        }));
-      } else {
-        console.error("The value object does not contain a valid date field.");
-      }
-    },
-    [handleOnDeleteDates]
-  );
+      });
+    } else {
+      console.error("The value object does not contain a valid date field:", value);
+    }
+  };
 
   if (calendarError) {
     return <>Error loading user calendar data: {calendarError}</>;
@@ -211,5 +189,4 @@ const UserActivity = ({ userId }: IUserYearClick) => {
   );
 };
 
-const UserActivityMemo = React.memo(UserActivity);
-export default UserActivityMemo;
+export default React.memo(UserActivity);
